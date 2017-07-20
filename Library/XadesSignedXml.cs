@@ -162,13 +162,14 @@ namespace Microsoft.Xades
         /// </summary>
         public const string SignedPropertiesType = "http://uri.etsi.org/01903#SignedProperties";
 
-
+        /// <summary>
+        /// XML Dsig object type
+        /// </summary>
         public const string XmlDsigObjectType = "http://www.w3.org/2000/09/xmldsig#Object";
         #endregion
 
         #region Private variables
-        private static readonly string[] idAttrs = new string[]
-        {
+        private static readonly string[] idAttrs = {
             "_id",
             "_Id",
             "_ID"
@@ -189,9 +190,13 @@ namespace Microsoft.Xades
         #endregion
 
         #region Public properties
-
+        /// <summary>
+        /// Prefix for xml signature element
+        /// </summary>
         public static string XmlDSigPrefix { get; set; }
-
+        /// <summary>
+        /// prefix for Xades elements
+        /// </summary>
         public static string XmlXadesPrefix { get; set; }
 
 
@@ -314,7 +319,9 @@ namespace Microsoft.Xades
                 }
             }
         }
-
+        /// <summary>
+        /// Content element
+        /// </summary>
         public XmlElement ContentElement
         {
             get
@@ -328,6 +335,9 @@ namespace Microsoft.Xades
             }
         }
 
+        /// <summary>
+        /// Destination for the signature element
+        /// </summary>
         public XmlElement SignatureNodeDestination
         {
             get
@@ -341,6 +351,9 @@ namespace Microsoft.Xades
             }
         }
 
+        /// <summary>
+        /// Should add xades namespace?
+        /// </summary>
         public bool AddXadesNamespace
         {
             get
@@ -716,7 +729,10 @@ namespace Microsoft.Xades
             return retVal;
         }
 
-
+        /// <summary>
+        /// Returns the certificate used for signing
+        /// </summary>
+        /// <returns></returns>
         public X509Certificate2 GetSigningCertificate()
         {
             XmlNode keyXml = this.KeyInfo.GetXml().GetElementsByTagName("X509Certificate", SignedXml.XmlDsigNamespaceUrl)[0];
@@ -757,7 +773,7 @@ namespace Microsoft.Xades
                 else if (this.SignedInfo.SignatureMethod == "http://www.w3.org/2001/04/xmldsig-more#rsa-sha512")
                 {
                     CryptoConfig.AddAlgorithm(typeof(Microsoft.Xades.RSAPKCS1SHA512SignatureDescription), "http://www.w3.org/2001/04/xmldsig-more#rsa-sha512");
-                }                
+                }
             }
 
             retVal = this.CheckDigestedReferences();
@@ -765,7 +781,7 @@ namespace Microsoft.Xades
             if (retVal == false)
             {
                 throw new CryptographicException("CheckXmldsigSignature() failed");
-            }                       
+            }
 
             var key = this.GetPublicKey();
             retVal = this.CheckSignedInfo(key);
@@ -773,7 +789,7 @@ namespace Microsoft.Xades
             if (retVal == false)
             {
                 throw new CryptographicException("CheckXmldsigSignature() failed");
-            }                       
+            }
 
             return retVal;
         }
@@ -785,11 +801,10 @@ namespace Microsoft.Xades
         public virtual bool ValidateAgainstSchema()
         {
             bool retValue = false;
-
-            Assembly assembly = Assembly.GetExecutingAssembly();
-            XmlSchemaSet schemaSet = new XmlSchemaSet();
-            XmlSchema xmlSchema;
-            Stream schemaStream;
+            XmlSchemaSet schemaSet = new XmlSchemaSet()
+            {
+                XmlResolver = new LocalXmlResolver() // add our custom resolver to avoid automatic loading from internet
+            };
 
             NameTable xadesNameTable;
             XmlNamespaceManager xmlNamespaceManager;
@@ -800,16 +815,18 @@ namespace Microsoft.Xades
 
             try
             {
-                schemaStream = assembly.GetManifestResourceStream("Microsoft.Xades.xmldsig-core-schema.xsd");
-                xmlSchema = XmlSchema.Read(schemaStream, new ValidationEventHandler(this.SchemaValidationHandler));
-                schemaSet.Add(xmlSchema);
-                schemaStream.Close();
+                Assembly assembly = Assembly.GetExecutingAssembly();
+                using (var schemaStream = assembly.GetManifestResourceStream("Microsoft.Xades.xmldsig-core-schema.xsd"))
+                {
+                    var xmlSchema = XmlSchema.Read(schemaStream, new ValidationEventHandler(this.SchemaValidationHandler));
+                    schemaSet.Add(xmlSchema);
+                }
 
-
-                schemaStream = assembly.GetManifestResourceStream("Microsoft.Xades.XAdES.xsd");
-                xmlSchema = XmlSchema.Read(schemaStream, new ValidationEventHandler(this.SchemaValidationHandler));
-                schemaSet.Add(xmlSchema);
-                schemaStream.Close();
+                using (var schemaStream = assembly.GetManifestResourceStream("Microsoft.Xades.XAdES.xsd"))
+                {
+                    var xmlSchemaXades = XmlSchema.Read(schemaStream, new ValidationEventHandler(this.SchemaValidationHandler));
+                    schemaSet.Add(xmlSchemaXades);
+                }
 
                 if (this.validationErrorOccurred)
                 {
@@ -873,8 +890,7 @@ namespace Microsoft.Xades
             //}
             //string xmldsigCertHash = Convert.ToBase64String(((X509Certificate)keyInfoX509Data.Certificates[0]).GetCertHash());
 
-            X509Certificate xmldsigCert = GetSigningCertificate();
-            string xmldsigCertHash = Convert.ToBase64String(xmldsigCert.GetCertHash());
+
 
             CertCollection xadesSigningCertificateCollection = this.XadesObject.QualifyingProperties.SignedProperties.SignedSignatureProperties.SigningCertificate.CertCollection;
             if (xadesSigningCertificateCollection.Count <= 0)
@@ -883,6 +899,8 @@ namespace Microsoft.Xades
             }
             string xadesCertHash = Convert.ToBase64String(((Cert)xadesSigningCertificateCollection[0]).CertDigest.DigestValue);
 
+            X509Certificate xmldsigCert = GetSigningCertificate();
+            string xmldsigCertHash = GetCertDigestAlgorithm(xmldsigCert.GetRawCertData(), ((Cert)xadesSigningCertificateCollection[0]).CertDigest.DigestMethod.Algorithm);
 
             if (String.Compare(xmldsigCertHash, xadesCertHash, true, CultureInfo.InvariantCulture) != 0)
             {
@@ -1458,7 +1476,9 @@ namespace Microsoft.Xades
 
             return description;
         }
-
+        /// <summary>
+        /// Computes the signature
+        /// </summary>
         public new void ComputeSignature()
         {
 
@@ -1505,6 +1525,10 @@ namespace Microsoft.Xades
             this.m_signature.SignatureValue = description.CreateFormatter(signingKey).CreateSignature(hash);
         }
 
+        /// <summary>
+        /// Gets the content reference
+        /// </summary>
+        /// <returns></returns>
         public Reference GetContentReference()
         {
             XadesObject xadesObject = null;
@@ -1535,7 +1559,7 @@ namespace Microsoft.Xades
             return (Reference)SignedInfo.References[0];
         }
 
-        public void FindContentElement()
+        private void FindContentElement()
         {
             Reference contentRef = GetContentReference();
 
@@ -1549,7 +1573,10 @@ namespace Microsoft.Xades
                 contentElement = this.signatureDocument.DocumentElement;
             }
         }
-
+        /// <summary>
+        /// Returns the signature element
+        /// </summary>
+        /// <returns></returns>
         public XmlElement GetSignatureElement()
         {
             var signatureElement = GetIdElement(this.signatureDocument, this.Signature.Id);
@@ -1579,7 +1606,11 @@ namespace Microsoft.Xades
             }
         }
 
-
+        /// <summary>
+        /// Returns all namespaces
+        /// </summary>
+        /// <param name="fromElement"></param>
+        /// <returns></returns>
         public List<XmlAttribute> GetAllNamespaces(XmlElement fromElement)
         {
             List<XmlAttribute> namespaces = new List<XmlAttribute>();
@@ -1780,7 +1811,7 @@ namespace Microsoft.Xades
         }
 
 
-        private AsymmetricAlgorithm GetPublicKey()
+        private new AsymmetricAlgorithm GetPublicKey()
         {
             Type SignedXml_Type = typeof(SignedXml);
 
@@ -1799,7 +1830,7 @@ namespace Microsoft.Xades
             return Convert.ToBoolean(SignedXml_Type_CheckDigestedReferences.Invoke(this, null));
         }
 
-       
+
         private bool CheckSignedInfo(AsymmetricAlgorithm key)
         {
             if (key == null)
@@ -1819,22 +1850,22 @@ namespace Microsoft.Xades
             HashAlgorithm hashAlgorithm = signatureDescription.CreateDigest();
             if (hashAlgorithm == null)
                 throw new CryptographicException("signature description can't be created");
-            
-            /// NECESARIO PARA EL CALCULO CORRECTO
+
+            // NECESARIO PARA EL CALCULO CORRECTO
             byte[] hashval = GetC14NDigest(hashAlgorithm, "ds");
 
             AsymmetricSignatureDeformatter asymmetricSignatureDeformatter = signatureDescription.CreateDeformatter(key);
 
             return asymmetricSignatureDeformatter.VerifySignature(hashval, m_signature.SignatureValue);
         }
-        
-        
+
+
         /// <summary>
         /// We won't call System.Security.Cryptography.Xml.SignedXml.GetC14NDigest(), as we want to use our own.
         /// </summary>
         private byte[] GetC14NDigest(HashAlgorithm hash)
         {
-            return null;            
+            return null;
         }
 
         /// <summary>
@@ -2325,6 +2356,30 @@ namespace Microsoft.Xades
 
             return retVal;
         }
+
+        private string GetCertDigestAlgorithm(byte[] rawCert, string uri)
+        {
+            switch (uri)
+            {
+                case "http://www.w3.org/2000/09/xmldsig#sha1":
+                    return Convert.ToBase64String(SHA1.Create().ComputeHash(rawCert));
+                case "http://www.w3.org/2001/04/xmlenc#sha256":
+                    return Convert.ToBase64String(SHA256.Create().ComputeHash(rawCert));
+                case "http://www.w3.org/2001/04/xmlenc#sha512":
+                    return Convert.ToBase64String(SHA512.Create().ComputeHash(rawCert));
+                default:
+                    return null;
+            }
+        }
         #endregion
     }
+    class LocalXmlResolver : XmlUrlResolver
+    {
+        public override object GetEntity(Uri absoluteUri, string role, Type ofObjectToReturn)
+        {
+            return null;
+        }
+    }
+
+
 }
