@@ -47,7 +47,7 @@ namespace Tests
             {
                 var parameters = new FirmaXadesNet.Signature.Parameters.SignatureParameters()
                 {
-                    SignatureMethod = SignatureMethod.RSAwithSHA1,
+                    SignatureMethod = SignatureMethod.RSAwithSHA256,
                     SigningDate = DateTime.Now,
                     SignaturePackaging = SignaturePackaging.ENVELOPED,
                     InputMimeType = "text/xml",
@@ -76,11 +76,13 @@ namespace Tests
                     var resultDoc = svc.Load(@"c:\temp\xades.xml");
 
                     var result = resultDoc[0].XadesSignature.XadesCheckSignature(Microsoft.Xades.XadesCheckSignatureMasks.AllChecks);
-
+                    Assert.True(result);
+                    var result2 = svc.Validate(resultDoc[0]);
+                    Assert.True(result2.IsValid);
                 }
             }
             
-            Assert.True(true);
+          
         }
 
         public static X509Certificate2 GenerateSelfSignedCertificate(string subjectName, string issuerName, AsymmetricKeyParameter issuerPrivKey, int keyStrength = 2048)
