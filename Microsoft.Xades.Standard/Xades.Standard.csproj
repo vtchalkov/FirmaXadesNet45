@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Description>Xades implementation based on Microsoft France open source implementation and forked from FirmaXadesNet - a library developed in C # for the generation of XAdES signatures made by the Department of New Technologies of the Department of Urbanism of the City of Cartagena, which is based on a modification of the XAdES starter kit developed by Microsoft France.</Description>
   </PropertyGroup>
 
   <ItemGroup>
