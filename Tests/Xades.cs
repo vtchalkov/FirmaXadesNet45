@@ -9,6 +9,7 @@ using Org.BouncyCastle.Asn1.Pkcs;
 using Org.BouncyCastle.Asn1.X509;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Generators;
+using Org.BouncyCastle.Crypto.Operators;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Crypto.Prng;
 using Org.BouncyCastle.Math;
@@ -137,11 +138,11 @@ namespace Tests
             // merge into X509Certificate2
             var x509 = new System.Security.Cryptography.X509Certificates.X509Certificate2(certificate.GetEncoded());
 
-            var seq = (Asn1Sequence)Asn1Object.FromByteArray(info.PrivateKey.GetDerEncoded());
+            var seq = (Asn1Sequence)Asn1Object.FromByteArray(info.ParsePrivateKey().GetDerEncoded());
             if (seq.Count != 9)
                 throw new PemException("malformed sequence in RSA private key");
 
-            var rsa = new RsaPrivateKeyStructure(seq);
+            var rsa = RsaPrivateKeyStructure.GetInstance(seq);
             RsaPrivateCrtKeyParameters rsaparams = new RsaPrivateCrtKeyParameters(
                 rsa.Modulus, rsa.PublicExponent, rsa.PrivateExponent, rsa.Prime1, rsa.Prime2, rsa.Exponent1, rsa.Exponent2, rsa.Coefficient);
 
@@ -166,7 +167,6 @@ namespace Tests
 
             // Signature Algorithm
             const string signatureAlgorithm = "SHA256WithRSA";
-            certificateGenerator.SetSignatureAlgorithm(signatureAlgorithm);
 
             // Issuer and Subject Name
             var subjectDN = new X509Name(subjectName);
@@ -193,13 +193,13 @@ namespace Tests
             // Generating the Certificate
             var issuerKeyPair = subjectKeyPair;
 
-            // selfsign certificate
-            var certificate = certificateGenerator.Generate(issuerKeyPair.Private, random);
-            var x509 = new System.Security.Cryptography.X509Certificates.X509Certificate2(certificate.GetEncoded());
-            rootCertificate = new X509Certificate2();
-            rootCertificate.Import(certificate.GetEncoded());
-            return issuerKeyPair.Private;
+            // create key factory
+            ISignatureFactory signatureFactory = new Asn1SignatureFactory(signatureAlgorithm, issuerKeyPair.Private, random);
 
+            // selfsign certificate
+            var certificate = certificateGenerator.Generate(signatureFactory);
+            rootCertificate = new System.Security.Cryptography.X509Certificates.X509Certificate2(certificate.GetEncoded());
+            return issuerKeyPair.Private;
         }
     }
 }

@@ -58,7 +58,7 @@ namespace FirmaXadesNet.Validation
             catch (Exception ex)
             {
                 result.IsValid = false;
-                result.Message = "La verificación de la firma no ha sido satisfactoria";
+                result.Message = "Signature verification is unsuccessful!";
 
                 return result;
             }
@@ -73,8 +73,10 @@ namespace FirmaXadesNet.Validation
                 byte[] tsHashValue = token.TimeStampInfo.GetMessageImprintDigest();
                 Crypto.DigestMethod tsDigestMethod = Crypto.DigestMethod.GetByOid(token.TimeStampInfo.HashAlgorithm.Algorithm.Id);
 
-                ArrayList signatureValueElementXpaths = new ArrayList();
-                signatureValueElementXpaths.Add("ds:SignatureValue");
+                ArrayList signatureValueElementXpaths = new ArrayList
+                {
+                    "ds:SignatureValue"
+                };
                 byte[] signatureValueHash = DigestUtil.ComputeHashValue(XMLUtil.ComputeValueOfElementList(sigDocument.XadesSignature, signatureValueElementXpaths), tsDigestMethod);
 
                 if (!Arrays.AreEqual(tsHashValue, signatureValueHash))
