@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.16
+VisualStudioVersion = 15.0.26730.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FirmaXadesNet", "FirmaXadesNet\FirmaXadesNet.csproj", "{84B87815-DD45-4C60-B343-C11D45847BDF}"
 EndProject
@@ -14,6 +14,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoFirmaElemento", "DemoFirmaElemento\DemoFirmaElemento.csproj", "{1AD6C6B7-725B-4DF3-A377-FA8AEECA3160}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{C50C30EC-42B5-4937-8C93-4D30EE100C24}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xades.Standard", "Microsoft.Xades.Standard\Xades.Standard.csproj", "{DF516660-3C4F-4645-ABBA-8AAE06213A01}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -87,8 +89,23 @@ Global
 		{C50C30EC-42B5-4937-8C93-4D30EE100C24}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{C50C30EC-42B5-4937-8C93-4D30EE100C24}.Release|x86.ActiveCfg = Release|Any CPU
 		{C50C30EC-42B5-4937-8C93-4D30EE100C24}.Release|x86.Build.0 = Release|Any CPU
+		{DF516660-3C4F-4645-ABBA-8AAE06213A01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF516660-3C4F-4645-ABBA-8AAE06213A01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF516660-3C4F-4645-ABBA-8AAE06213A01}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{DF516660-3C4F-4645-ABBA-8AAE06213A01}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{DF516660-3C4F-4645-ABBA-8AAE06213A01}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{DF516660-3C4F-4645-ABBA-8AAE06213A01}.Debug|x86.Build.0 = Debug|Any CPU
+		{DF516660-3C4F-4645-ABBA-8AAE06213A01}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF516660-3C4F-4645-ABBA-8AAE06213A01}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DF516660-3C4F-4645-ABBA-8AAE06213A01}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{DF516660-3C4F-4645-ABBA-8AAE06213A01}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{DF516660-3C4F-4645-ABBA-8AAE06213A01}.Release|x86.ActiveCfg = Release|Any CPU
+		{DF516660-3C4F-4645-ABBA-8AAE06213A01}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F63F3D42-A5C8-418F-A656-9F47D857EA29}
 	EndGlobalSection
 EndGlobal

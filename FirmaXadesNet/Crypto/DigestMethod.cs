@@ -119,7 +119,7 @@ namespace FirmaXadesNet.Crypto
             }
             else
             {
-                throw new Exception("Algoritmo no soportado");
+                throw new Exception("Unsupported algorithm");
             }
         }
 

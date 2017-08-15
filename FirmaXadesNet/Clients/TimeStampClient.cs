@@ -94,7 +94,7 @@ namespace FirmaXadesNet.Clients
             HttpWebResponse res = (HttpWebResponse)req.GetResponse();
             if (res.StatusCode != HttpStatusCode.OK)
             {
-                throw new Exception("El servidor ha devuelto una respuesta no válida");
+                throw new Exception("Server returned invalid response!");
             }
             else
             {
@@ -106,7 +106,7 @@ namespace FirmaXadesNet.Clients
 
                 if (tsRes.TimeStampToken == null)
                 {
-                    throw new Exception("El servidor no ha devuelto ningún sello de tiempo");
+                    throw new Exception("The server has not returned any time stamps!");
                 }
 
                 return tsRes.TimeStampToken.GetEncoded();
