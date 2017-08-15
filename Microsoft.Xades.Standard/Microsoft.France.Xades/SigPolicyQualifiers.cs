@@ -71,14 +71,7 @@ namespace Microsoft.Xades
 		/// <returns>Flag indicating if a member needs serialization</returns>
 		public bool HasChanged()
 		{
-			bool retVal = false;
-
-			if (this.sigPolicyQualifierCollection.Count > 0)
-			{
-				retVal = true;
-			}
-
-			return retVal;
+			return  sigPolicyQualifierCollection.Count > 0;
 		}
 
 		/// <summary>
@@ -142,12 +135,9 @@ namespace Microsoft.Xades
 			}
 			finally 
 			{
-				IDisposable disposable = enumerator as IDisposable;
-				if (disposable != null)
-				{
-					disposable.Dispose();
-				}
-			}
+                if (enumerator is IDisposable disposable)
+                    disposable.Dispose();
+            }
 		}
 
 		/// <summary>

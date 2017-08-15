@@ -114,20 +114,7 @@ namespace Microsoft.Xades
 		/// <returns>Flag indicating if a member needs serialization</returns>
 		public bool HasChanged()
 		{
-			bool retVal = false;
-
-			if (this.id != null && this.id != "")
-			{
-				retVal = true;
-			}
-			if (this.encapsulatedX509CertificateCollection.Count > 0)
-			{
-				retVal = true;
-			}
-			if (this.otherCertificateCollection.Count > 0)
-			{
-				retVal = true;
-			}
+			bool retVal = !string.IsNullOrEmpty(id) || encapsulatedX509CertificateCollection.Count > 0 || otherCertificateCollection.Count > 0;
 
 			return retVal;
 		}
@@ -181,12 +168,11 @@ namespace Microsoft.Xades
 			}
 			finally 
 			{
-				IDisposable disposable = enumerator as IDisposable;
-				if (disposable != null)
-				{
-					disposable.Dispose();
-				}
-			}
+                if (enumerator is IDisposable disposable)
+                {
+                    disposable.Dispose();
+                }
+            }
 
 			xmlNodeList = xmlElement.SelectNodes("xades:OtherCertificate", xmlNamespaceManager);
 			enumerator = xmlNodeList.GetEnumerator();
@@ -205,12 +191,11 @@ namespace Microsoft.Xades
 			}
 			finally 
 			{
-				IDisposable disposable = enumerator as IDisposable;
-				if (disposable != null)
-				{
-					disposable.Dispose();
-				}
-			}
+                if (enumerator is IDisposable disposable)
+                {
+                    disposable.Dispose();
+                }
+            }
 		}
 
 		/// <summary>
@@ -226,7 +211,7 @@ namespace Microsoft.Xades
 			retVal = creationXmlDocument.CreateElement(XadesSignedXml.XmlXadesPrefix, "CertificateValues", XadesSignedXml.XadesNamespaceUri);
             retVal.SetAttribute("xmlns:ds", SignedXml.XmlDsigNamespaceUrl);
 
-			if (this.id != null && this.id != "")
+			if (!string.IsNullOrEmpty(id))
 			{
 				retVal.SetAttribute("Id", this.id);
 			}

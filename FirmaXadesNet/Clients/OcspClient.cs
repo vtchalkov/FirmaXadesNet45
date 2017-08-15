@@ -104,7 +104,7 @@ namespace FirmaXadesNet.Clients
                     }
                 }
             }
-            catch (Exception e)
+            catch
             {
                 return null;
             }

@@ -143,8 +143,10 @@ namespace FirmaXadesNet
                 }
             }
 
-            SignatureDocument coSignatureDocument = new SignatureDocument();
-            coSignatureDocument.Document = (XmlDocument)sigDocument.Document.Clone();
+            SignatureDocument coSignatureDocument = new SignatureDocument
+            {
+                Document = (XmlDocument)sigDocument.Document.Clone()
+            };
             coSignatureDocument.Document.PreserveWhitespace = true;
 
             coSignatureDocument.XadesSignature = new XadesSignedXml(coSignatureDocument.Document);
@@ -199,8 +201,10 @@ namespace FirmaXadesNet
 
             SignatureDocument.CheckSignatureDocument(sigDocument);
 
-            SignatureDocument counterSigDocument = new SignatureDocument();
-            counterSigDocument.Document = (XmlDocument)sigDocument.Document.Clone();
+            SignatureDocument counterSigDocument = new SignatureDocument
+            {
+                Document = (XmlDocument)sigDocument.Document.Clone()
+            };
             counterSigDocument.Document.PreserveWhitespace = true;
 
             XadesSignedXml counterSignature = new XadesSignedXml(counterSigDocument.Document);
@@ -208,29 +212,37 @@ namespace FirmaXadesNet
 
             counterSignature.SigningKey = parameters.Signer.SigningKey;
 
-            _refContent = new Reference();
-            _refContent.Uri = "#" + sigDocument.XadesSignature.SignatureValueId;
-            _refContent.Id = "Reference-" + Guid.NewGuid().ToString();
-            _refContent.Type = "http://uri.etsi.org/01903#CountersignedSignature";
+            _refContent = new Reference
+            {
+                Uri = "#" + sigDocument.XadesSignature.SignatureValueId,
+                Id = "Reference-" + Guid.NewGuid().ToString(),
+                Type = "http://uri.etsi.org/01903#CountersignedSignature"
+            };
             _refContent.AddTransform(new XmlDsigC14NTransform());
             counterSignature.AddReference(_refContent);
 
             _mimeType = "text/xml";
             _encoding = "UTF-8";
 
-            KeyInfo keyInfo = new KeyInfo();
-            keyInfo.Id = "KeyInfoId-" + counterSignature.Signature.Id;
+            KeyInfo keyInfo = new KeyInfo
+            {
+                Id = "KeyInfoId-" + counterSignature.Signature.Id
+            };
             keyInfo.AddClause(new KeyInfoX509Data((X509Certificate)parameters.Signer.Certificate));
             keyInfo.AddClause(new RSAKeyValue((RSA)parameters.Signer.SigningKey));
             counterSignature.KeyInfo = keyInfo;
 
-            Reference referenceKeyInfo = new Reference();
-            referenceKeyInfo.Id = "ReferenceKeyInfo-" + counterSignature.Signature.Id;
-            referenceKeyInfo.Uri = "#KeyInfoId-" + counterSignature.Signature.Id;
+            Reference referenceKeyInfo = new Reference
+            {
+                Id = "ReferenceKeyInfo-" + counterSignature.Signature.Id,
+                Uri = "#KeyInfoId-" + counterSignature.Signature.Id
+            };
             counterSignature.AddReference(referenceKeyInfo);
 
-            XadesObject counterSignatureXadesObject = new XadesObject();
-            counterSignatureXadesObject.Id = "CounterSignatureXadesObject-" + Guid.NewGuid().ToString();
+            XadesObject counterSignatureXadesObject = new XadesObject
+            {
+                Id = "CounterSignatureXadesObject-" + Guid.NewGuid().ToString()
+            };
             counterSignatureXadesObject.QualifyingProperties.Target = "#" + counterSignature.Signature.Id;
             counterSignatureXadesObject.QualifyingProperties.SignedProperties.Id = "SignedProperties-" + counterSignature.Signature.Id;
 
@@ -306,8 +318,10 @@ namespace FirmaXadesNet
 
             foreach (var signatureNode in signatureNodeList)
             {
-                SignatureDocument sigDocument = new SignatureDocument();
-                sigDocument.Document = (XmlDocument)xmlDocument.Clone();
+                SignatureDocument sigDocument = new SignatureDocument
+                {
+                    Document = (XmlDocument)xmlDocument.Clone()
+                };
                 sigDocument.Document.PreserveWhitespace = true;
                 sigDocument.XadesSignature = new XadesSignedXml(sigDocument.Document);
                 sigDocument.XadesSignature.LoadXml((XmlElement)signatureNode);
@@ -364,10 +378,11 @@ namespace FirmaXadesNet
         {
             sigDocument.Document = xmlDocument;
 
-            _refContent = new Reference();
-
-            _refContent.Uri = "#" + elementId;
-            _refContent.Id = "Reference-" + Guid.NewGuid().ToString();
+            _refContent = new Reference
+            {
+                Uri = "#" + elementId,
+                Id = "Reference-" + Guid.NewGuid().ToString()
+            };
 
             _mimeType = mimeType;
 
@@ -394,8 +409,9 @@ namespace FirmaXadesNet
         /// <summary>
         /// Inserta un documento para generar una firma internally detached.
         /// </summary>
-        /// <param name="content"></param>
-        /// <param name="mimeType"></param>
+        /// <param name="sigDocument"></param>
+        /// <param name="input"></param>
+        /// <param name="mimeType"></param>        
         private void SetContentInternallyDetached(SignatureDocument sigDocument, Stream input, string mimeType)
         {
             sigDocument.Document = new XmlDocument();
@@ -405,11 +421,12 @@ namespace FirmaXadesNet
 
             string id = "CONTENT-" + Guid.NewGuid().ToString();
 
-            _refContent = new Reference();
-
-            _refContent.Uri = "#" + id;
-            _refContent.Id = "Reference-" + Guid.NewGuid().ToString();
-            _refContent.Type = XadesSignedXml.XmlDsigObjectType;
+            _refContent = new Reference
+            {
+                Uri = "#" + id,
+                Id = "Reference-" + Guid.NewGuid().ToString(),
+                Type = XadesSignedXml.XmlDsigObjectType
+            };
 
             _mimeType = mimeType;
 
@@ -419,8 +436,10 @@ namespace FirmaXadesNet
             {
                 _encoding = "UTF-8";
 
-                XmlDocument doc = new XmlDocument();
-                doc.PreserveWhitespace = true;
+                XmlDocument doc = new XmlDocument
+                {
+                    PreserveWhitespace = true
+                };
                 doc.Load(input);
 
                 contentElement.InnerXml = doc.DocumentElement.OuterXml;
@@ -486,9 +505,11 @@ namespace FirmaXadesNet
 
             //Add an object
             string dataObjectId = "DataObject-" + Guid.NewGuid().ToString();
-            System.Security.Cryptography.Xml.DataObject dataObject = new System.Security.Cryptography.Xml.DataObject();
-            dataObject.Data = doc.ChildNodes;
-            dataObject.Id = dataObjectId;
+            System.Security.Cryptography.Xml.DataObject dataObject = new System.Security.Cryptography.Xml.DataObject
+            {
+                Data = doc.ChildNodes,
+                Id = dataObjectId
+            };
             sigDocument.XadesSignature.AddObject(dataObject);
 
             _refContent.Id = "Reference-" + Guid.NewGuid().ToString();
@@ -508,8 +529,8 @@ namespace FirmaXadesNet
         /// <summary>
         /// Especifica el nodo en el cual se añadira la firma
         /// </summary>
-        /// <param name="elementXPath"></param>
-        /// <param name="namespaces"></param>
+        /// <param name="sigDocument"></param>
+        /// <param name="destination"></param>
         private void SetSignatureDestination(SignatureDocument sigDocument, SignatureXPathExpression destination)
         {
             XmlNode nodo;
@@ -552,7 +573,7 @@ namespace FirmaXadesNet
             _refContent.Uri = new Uri(fileName).AbsoluteUri;
             _refContent.Id = "Reference-" + Guid.NewGuid().ToString();
 
-            if (_refContent.Uri.EndsWith(".xml") || _refContent.Uri.EndsWith(".XML"))
+            if (_refContent.Uri.EndsWith(".xml", StringComparison.InvariantCulture) || _refContent.Uri.EndsWith(".XML", StringComparison.InvariantCulture))
             {
                 _mimeType = "text/xml";
                 _refContent.AddTransform(new XmlDsigC14NTransform());
@@ -680,8 +701,10 @@ namespace FirmaXadesNet
 
         private void AddXadesInfo(SignatureDocument sigDocument, SignatureParameters parameters)
         {
-            XadesObject xadesObject = new XadesObject();
-            xadesObject.Id = "XadesObjectId-" + Guid.NewGuid().ToString();
+            XadesObject xadesObject = new XadesObject
+            {
+                Id = "XadesObjectId-" + Guid.NewGuid().ToString()
+            };
             xadesObject.QualifyingProperties.Id = "QualifyingProperties-" + Guid.NewGuid().ToString();
             xadesObject.QualifyingProperties.Target = "#" + sigDocument.XadesSignature.Signature.Id;
             xadesObject.QualifyingProperties.SignedProperties.Id = "SignedProperties-" + sigDocument.XadesSignature.Signature.Id;
@@ -699,17 +722,20 @@ namespace FirmaXadesNet
         {            
             sigDocument.XadesSignature.SigningKey = parameters.Signer.SigningKey;
 
-            KeyInfo keyInfo = new KeyInfo();
-            keyInfo.Id = "KeyInfoId-" + sigDocument.XadesSignature.Signature.Id;
+            KeyInfo keyInfo = new KeyInfo
+            {
+                Id = "KeyInfoId-" + sigDocument.XadesSignature.Signature.Id
+            };
             keyInfo.AddClause(new KeyInfoX509Data((X509Certificate)parameters.Signer.Certificate));
             keyInfo.AddClause(new RSAKeyValue((RSA)parameters.Signer.SigningKey));
 
             sigDocument.XadesSignature.KeyInfo = keyInfo;
 
-            Reference reference = new Reference();
-
-            reference.Id = "ReferenceKeyInfo";
-            reference.Uri = "#KeyInfoId-" + sigDocument.XadesSignature.Signature.Id;
+            Reference reference = new Reference
+            {
+                Id = "ReferenceKeyInfo",
+                Uri = "#KeyInfoId-" + sigDocument.XadesSignature.Signature.Id
+            };
 
             sigDocument.XadesSignature.AddReference(reference);
         }
@@ -736,8 +762,10 @@ namespace FirmaXadesNet
 
                 if (!string.IsNullOrEmpty(parameters.SignaturePolicyInfo.PolicyUri))
                 {
-                    SigPolicyQualifier spq = new SigPolicyQualifier();
-                    spq.AnyXmlElement = sigDocument.Document.CreateElement(XadesSignedXml.XmlXadesPrefix, "SPURI", XadesSignedXml.XadesNamespaceUri);
+                    SigPolicyQualifier spq = new SigPolicyQualifier
+                    {
+                        AnyXmlElement = sigDocument.Document.CreateElement(XadesSignedXml.XmlXadesPrefix, "SPURI", XadesSignedXml.XadesNamespaceUri)
+                    };
                     spq.AnyXmlElement.InnerText = parameters.SignaturePolicyInfo.PolicyUri;
 
                     signedSignatureProperties.SignaturePolicyIdentifier.SignaturePolicyId.SigPolicyQualifiers.SigPolicyQualifierCollection.Add(spq);
@@ -750,15 +778,16 @@ namespace FirmaXadesNet
                 }
             }
 
-            signedSignatureProperties.SigningTime = parameters.SigningDate.HasValue ? parameters.SigningDate.Value : DateTime.Now;
+            signedSignatureProperties.SigningTime = parameters.SigningDate ?? DateTime.Now;
 
             if (!string.IsNullOrEmpty(_mimeType))
             {
-                DataObjectFormat newDataObjectFormat = new DataObjectFormat();
-
-                newDataObjectFormat.MimeType = _mimeType;
-                newDataObjectFormat.Encoding = _encoding;
-                newDataObjectFormat.ObjectReferenceAttribute = "#" + _refContent.Id;
+                DataObjectFormat newDataObjectFormat = new DataObjectFormat
+                {
+                    MimeType = _mimeType,
+                    Encoding = _encoding,
+                    ObjectReferenceAttribute = "#" + _refContent.Id
+                };
 
                 signedDataObjectProperties.DataObjectFormatCollection.Add(newDataObjectFormat);
             }
@@ -787,8 +816,10 @@ namespace FirmaXadesNet
 
                 foreach (XmlElement signatureCommitmentQualifier in signatureCommitment.CommitmentTypeQualifiers)
                 {
-                    CommitmentTypeQualifier ctq = new CommitmentTypeQualifier();
-                    ctq.AnyXmlElement = signatureCommitmentQualifier;
+                    CommitmentTypeQualifier ctq = new CommitmentTypeQualifier
+                    {
+                        AnyXmlElement = signatureCommitmentQualifier
+                    };
 
                     cti.CommitmentTypeQualifiers.CommitmentTypeQualifierCollection.Add(ctq);
                 }

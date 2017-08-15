@@ -122,27 +122,7 @@ namespace Microsoft.Xades
 		/// <returns>Flag indicating if a member needs serialization</returns>
 		public bool HasChanged()
 		{
-			bool retVal = false;
-
-			if (this.dataObjectFormatCollection.Count > 0)
-			{
-				retVal = true;
-			}
-
-			if (this.commitmentTypeIndicationCollection.Count > 0)
-			{
-				retVal = true;
-			}
-
-			if (this.allDataObjectsTimeStampCollection.Count > 0)
-			{
-				retVal = true;
-			}
-
-			if (this.individualDataObjectsTimeStampCollection.Count > 0)
-			{
-				retVal = true;
-			}
+			bool retVal = dataObjectFormatCollection.Count > 0 || commitmentTypeIndicationCollection.Count > 0 || allDataObjectsTimeStampCollection.Count > 0 || individualDataObjectsTimeStampCollection.Count > 0;
 
 			return retVal;
 		}
@@ -187,12 +167,9 @@ namespace Microsoft.Xades
 			}
 			finally 
 			{
-				IDisposable disposable = enumerator as IDisposable;
-				if (disposable != null)
-				{
-					disposable.Dispose();
-				}
-			}
+                if (enumerator is IDisposable disposable)
+                    disposable.Dispose();
+            }
 
 			//this.dataObjectFormatCollection.Clear();
 			xmlNodeList = xmlElement.SelectNodes("xsd:CommitmentTypeIndication", xmlNamespaceManager);
@@ -212,12 +189,11 @@ namespace Microsoft.Xades
 			}
 			finally 
 			{
-				IDisposable disposable = enumerator as IDisposable;
-				if (disposable != null)
-				{
-					disposable.Dispose();
-				}
-			}
+                if (enumerator is IDisposable disposable)
+                {
+                    disposable.Dispose();
+                }
+            }
 
 			//this.dataObjectFormatCollection.Clear();
 			xmlNodeList = xmlElement.SelectNodes("xsd:AllDataObjectsTimeStamp", xmlNamespaceManager);
@@ -237,12 +213,11 @@ namespace Microsoft.Xades
 			}
 			finally 
 			{
-				IDisposable disposable = enumerator as IDisposable;
-				if (disposable != null)
-				{
-					disposable.Dispose();
-				}
-			}
+                if (enumerator is IDisposable disposable)
+                {
+                    disposable.Dispose();
+                }
+            }
 
 			//this.dataObjectFormatCollection.Clear();
 			xmlNodeList = xmlElement.SelectNodes("xsd:IndividualDataObjectsTimeStamp", xmlNamespaceManager);
@@ -262,12 +237,9 @@ namespace Microsoft.Xades
 			}
 			finally 
 			{
-				IDisposable disposable = enumerator as IDisposable;
-				if (disposable != null)
-				{
-					disposable.Dispose();
-				}
-			}
+                if (enumerator is IDisposable disposable)
+                    disposable.Dispose();
+            }
 		}
 
 		/// <summary>

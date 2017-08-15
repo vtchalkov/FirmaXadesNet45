@@ -238,54 +238,15 @@ namespace Microsoft.Xades
 		/// <returns>Flag indicating if a member needs serialization</returns>
 		public bool HasChanged()
 		{
-			bool retVal = false;
-
-			if (this.counterSignatureCollection.Count > 0)
-			{
-				retVal = true;
-			}
-
-			if (this.signatureTimeStampCollection.Count > 0)
-			{
-				retVal = true;
-			}
-
-			if (this.completeCertificateRefs != null && this.completeCertificateRefs.HasChanged())
-			{
-				retVal = true;
-			}
-
-			if (this.completeRevocationRefs != null && this.completeRevocationRefs.HasChanged())
-			{
-				retVal = true;
-			}
-
-			if (this.sigAndRefsTimeStampCollection.Count > 0)
-			{
-				retVal = true;
-			}
-
-			if (this.refsOnlyTimeStampCollection.Count > 0)
-			{
-				retVal = true;
-			}
-
-			if (this.certificateValues != null && this.certificateValues.HasChanged())
-			{
-				retVal = true;
-			}
-
-			if (this.revocationValues != null && this.revocationValues.HasChanged())
-			{
-				retVal = true;
-			}
-
-			if (this.archiveTimeStampCollection.Count > 0)
-			{
-				retVal = true;
-			}
-
-			return retVal;
+			return counterSignatureCollection.Count > 0 || 
+                          signatureTimeStampCollection.Count > 0 || 
+                          (completeCertificateRefs != null && completeCertificateRefs.HasChanged()) ||
+                          (completeRevocationRefs != null && this.completeRevocationRefs.HasChanged()) ||
+                          sigAndRefsTimeStampCollection.Count > 0 ||
+                          refsOnlyTimeStampCollection.Count > 0 || 
+                          (certificateValues != null && certificateValues.HasChanged()) ||
+                          (revocationValues != null && this.revocationValues.HasChanged()) ||
+                          archiveTimeStampCollection.Count > 0;
 		}
 
 		/// <summary>
@@ -353,12 +314,9 @@ namespace Microsoft.Xades
 			}
 			finally 
 			{
-				IDisposable disposable = enumerator as IDisposable;
-				if (disposable != null)
-				{
-					disposable.Dispose();
-				}
-			}
+                if (enumerator is IDisposable disposable)
+                    disposable.Dispose();
+            }
 
 			this.signatureTimeStampCollection.Clear();
             xmlNodeList = xmlElement.SelectNodes("xades:SignatureTimeStamp", xmlNamespaceManager);
@@ -378,12 +336,9 @@ namespace Microsoft.Xades
 			}
 			finally 
 			{
-				IDisposable disposable = enumerator as IDisposable;
-				if (disposable != null)
-				{
-					disposable.Dispose();
-				}
-			}
+                if (enumerator is IDisposable disposable)
+                    disposable.Dispose();
+            }
 
             xmlNodeList = xmlElement.SelectNodes("xades:CompleteCertificateRefs", xmlNamespaceManager);
 			if (xmlNodeList.Count != 0)
@@ -430,12 +385,9 @@ namespace Microsoft.Xades
 				}
 				finally 
 				{
-					IDisposable disposable = enumerator as IDisposable;
-					if (disposable != null)
-					{
-						disposable.Dispose();
-					}
-				}
+                    if (enumerator is IDisposable disposable)
+                        disposable.Dispose();
+                }
 			}
 			else
 			{
@@ -459,12 +411,9 @@ namespace Microsoft.Xades
 					}
 					finally 
 					{
-						IDisposable disposable = enumerator as IDisposable;
-						if (disposable != null)
-						{
-							disposable.Dispose();
-						}
-					}
+                        if (enumerator is IDisposable disposable)
+                            disposable.Dispose();
+                    }
 				}
 				else
 				{
@@ -515,12 +464,9 @@ namespace Microsoft.Xades
 			}
 			finally 
 			{
-				IDisposable disposable = enumerator as IDisposable;
-				if (disposable != null)
-				{
-					disposable.Dispose();
-				}
-			}
+                if (enumerator is IDisposable disposable)
+                    disposable.Dispose();
+            }
 
             xmlNodeList = xmlElement.SelectNodes("xadesv141:ArchiveTimeStamp", xmlNamespaceManager);
 
@@ -540,11 +486,8 @@ namespace Microsoft.Xades
             }
             finally
             {
-                IDisposable disposable = enumerator as IDisposable;
-                if (disposable != null)
-                {
+                if (enumerator is IDisposable disposable)
                     disposable.Dispose();
-                }
             }           
 
 		}

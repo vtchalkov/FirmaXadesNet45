@@ -113,12 +113,9 @@ namespace Microsoft.Xades
 			}
 			finally 
 			{
-				IDisposable disposable = enumerator as IDisposable;
-				if (disposable != null)
-				{
-					disposable.Dispose();
-				}
-			}
+                if (enumerator is IDisposable disposable)
+                    disposable.Dispose();
+            }
 		}
 
 		/// <summary>

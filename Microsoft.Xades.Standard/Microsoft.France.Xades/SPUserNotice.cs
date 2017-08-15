@@ -103,19 +103,7 @@ namespace Microsoft.Xades
 		/// <returns>Flag indicating if a member needs serialization</returns>
 		public override bool HasChanged()
 		{
-			bool retVal = false;
-
-			if (!String.IsNullOrEmpty(this.explicitText))
-			{
-				retVal = true;
-			}
-
-			if (this.noticeRef != null && this.noticeRef.HasChanged())
-			{
-				retVal = true;
-			}
-
-			return retVal;
+			return !String.IsNullOrEmpty(this.explicitText) || (this.noticeRef != null && this.noticeRef.HasChanged());
 		}
 
 		/// <summary>

@@ -49,14 +49,18 @@ namespace FirmaXadesNet.Upgraders
                     throw new Exception("The signature already contains a time stamp");
                 }
 
-                signatureValueElementXpaths = new ArrayList();
-                signatureValueElementXpaths.Add("ds:SignatureValue");
+                signatureValueElementXpaths = new ArrayList
+                {
+                    "ds:SignatureValue"
+                };
                 signatureValueHash = DigestUtil.ComputeHashValue(XMLUtil.ComputeValueOfElementList(signatureDocument.XadesSignature, signatureValueElementXpaths), parameters.DigestMethod);
 
                 byte[] tsa = parameters.TimeStampClient.GetTimeStamp(signatureValueHash, parameters.DigestMethod, true);
 
-                signatureTimeStamp = new TimeStamp("SignatureTimeStamp");
-                signatureTimeStamp.Id = "SignatureTimeStamp-" + signatureDocument.XadesSignature.Signature.Id;
+                signatureTimeStamp = new TimeStamp("SignatureTimeStamp")
+                {
+                    Id = "SignatureTimeStamp-" + signatureDocument.XadesSignature.Signature.Id
+                };
                 signatureTimeStamp.EncapsulatedTimeStamp.PkiData = tsa;
                 signatureTimeStamp.EncapsulatedTimeStamp.Id = "SignatureTimeStamp-" + Guid.NewGuid().ToString();
 

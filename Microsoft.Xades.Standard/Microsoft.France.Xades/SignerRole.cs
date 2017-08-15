@@ -100,19 +100,7 @@ namespace Microsoft.Xades
 		/// <returns>Flag indicating if a member needs serialization</returns>
 		public bool HasChanged()
 		{
-			bool retVal = false;
-
-			if (this.claimedRoles != null && this.claimedRoles.HasChanged())
-			{
-				retVal = true;
-			}
-
-			if (this.certifiedRoles != null && this.certifiedRoles.HasChanged())
-			{
-				retVal = true;
-			}
-
-			return retVal;
+			return (claimedRoles != null && claimedRoles.HasChanged()) || (certifiedRoles != null && certifiedRoles.HasChanged());
 		}
 
 		/// <summary>

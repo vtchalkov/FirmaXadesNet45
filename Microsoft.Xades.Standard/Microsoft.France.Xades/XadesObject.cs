@@ -89,17 +89,7 @@ namespace Microsoft.Xades
 		/// <returns>Flag indicating if a member needs serialization</returns>
 		public bool HasChanged()
 		{
-			bool retVal = false;
-
-			if (this.id != null && this.id != "")
-			{
-				retVal = true;
-			}
-
-			if (this.qualifyingProperties != null && this.qualifyingProperties.HasChanged())
-			{
-				retVal = true;
-			}
+			bool retVal = !string.IsNullOrEmpty(id) || (qualifyingProperties != null && qualifyingProperties.HasChanged());
 
 			return retVal;
 		}
@@ -156,17 +146,13 @@ namespace Microsoft.Xades
 
 			creationXmlDocument = new XmlDocument();
 			retVal = creationXmlDocument.CreateElement("ds", "Object", SignedXml.XmlDsigNamespaceUrl);
-			if (this.id != null && this.id != "")
-			{
-				retVal.SetAttribute("Id", this.id);
-			}
+            if (!string.IsNullOrEmpty(id))
+                retVal.SetAttribute("Id", this.id);
 
-			if (this.qualifyingProperties != null && this.qualifyingProperties.HasChanged())
-			{
-				retVal.AppendChild(creationXmlDocument.ImportNode(this.qualifyingProperties.GetXml(), true));
-			}
+            if (qualifyingProperties != null && qualifyingProperties.HasChanged())
+                retVal.AppendChild(creationXmlDocument.ImportNode(this.qualifyingProperties.GetXml(), true));
 
-			return retVal;
+            return retVal;
 		}
 		#endregion
 	}

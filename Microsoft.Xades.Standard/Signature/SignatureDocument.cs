@@ -92,8 +92,10 @@ namespace FirmaXadesNet.Signature
         {
             CheckSignatureDocument(this);
 
-            XmlWriterSettings settings = new XmlWriterSettings();
-            settings.Encoding = new UTF8Encoding();
+            XmlWriterSettings settings = new XmlWriterSettings
+            {
+                Encoding = new UTF8Encoding()
+            };
             using (var writer = XmlWriter.Create(fileName, settings))
             {
                 this.Document.Save(writer);
@@ -106,8 +108,10 @@ namespace FirmaXadesNet.Signature
         /// <param name="output"></param>
         public void Save(Stream output)
         {
-            XmlWriterSettings settings = new XmlWriterSettings();
-            settings.Encoding = new UTF8Encoding();
+            XmlWriterSettings settings = new XmlWriterSettings
+            {
+                Encoding = new UTF8Encoding()
+            };
             using (var writer = XmlWriter.Create(output, settings))
             {
                 this.Document.Save(writer);
@@ -159,8 +163,10 @@ namespace FirmaXadesNet.Signature
 
                     byte[] canonicalizedElement = XMLUtil.ApplyTransform(xmlSigned, new XmlDsigC14NTransform());
 
-                    XmlDocument doc = new XmlDocument();
-                    doc.PreserveWhitespace = true;
+                    XmlDocument doc = new XmlDocument
+                    {
+                        PreserveWhitespace = true
+                    };
                     doc.LoadXml(Encoding.UTF8.GetString(canonicalizedElement));
 
                     XmlNode canonSignature = _document.ImportNode(doc.DocumentElement, true);

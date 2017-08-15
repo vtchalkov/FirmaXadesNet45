@@ -115,22 +115,7 @@ namespace Microsoft.Xades
 		/// <returns>Flag indicating if a member needs serialization</returns>
 		public bool HasChanged()
 		{
-			bool retVal = false;
-
-            if (!String.IsNullOrEmpty(this.id))
-			{
-				retVal = true;
-			}
-
-			if (this.signedSignatureProperties != null && this.signedSignatureProperties.HasChanged())
-			{
-				retVal = true;
-			}
-
-			if (this.signedDataObjectProperties != null && this.signedDataObjectProperties.HasChanged())
-			{
-				retVal = true;
-			}
+			bool retVal = !String.IsNullOrEmpty(id) || (signedSignatureProperties != null && signedSignatureProperties.HasChanged()) || (signedDataObjectProperties != null && signedDataObjectProperties.HasChanged());
 
 			return retVal;
 		}

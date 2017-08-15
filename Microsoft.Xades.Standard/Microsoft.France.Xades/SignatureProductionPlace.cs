@@ -107,15 +107,6 @@ namespace Microsoft.Xades
 		}
 		#endregion
 
-		#region Constructors
-		/// <summary>
-		/// Default constructor
-		/// </summary>
-		public SignatureProductionPlace()
-		{
-		}
-		#endregion
-
 		#region Public methods
 		/// <summary>
 		/// Check to see if something has changed in this instance and needs to be serialized
@@ -123,27 +114,7 @@ namespace Microsoft.Xades
 		/// <returns>Flag indicating if a member needs serialization</returns>
 		public bool HasChanged()
 		{
-			bool retVal = false;
-
-            if (!String.IsNullOrEmpty(this.city))
-			{
-				retVal = true;
-			}
-
-			if (!String.IsNullOrEmpty(this.stateOrProvince))
-			{
-				retVal = true;
-			}
-
-			if (!String.IsNullOrEmpty(this.postalCode))
-			{
-				retVal = true;
-			}
-
-			if (!String.IsNullOrEmpty(this.countryName))
-			{
-				retVal = true;
-			}
+			bool retVal = !String.IsNullOrEmpty(this.city) || !String.IsNullOrEmpty(this.stateOrProvince) || !String.IsNullOrEmpty(postalCode) || !String.IsNullOrEmpty(countryName);
 
 			return retVal;
 		}
@@ -224,7 +195,7 @@ namespace Microsoft.Xades
 				retVal.AppendChild(bufferXmlElement);
 			}
 
-			if (this.countryName != null && this.countryName != "")
+			if (!string.IsNullOrEmpty(countryName))
 			{
                 bufferXmlElement = creationXmlDocument.CreateElement(XadesSignedXml.XmlXadesPrefix, "CountryName", XadesSignedXml.XadesNamespaceUri);
 				bufferXmlElement.InnerText = this.countryName;

@@ -31,7 +31,7 @@ using System.Threading.Tasks;
 
 namespace FirmaXadesNet.Utils
 {
-    public class CertUtil
+    public static class CertUtil
     {
         #region Public methods
 

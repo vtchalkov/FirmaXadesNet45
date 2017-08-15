@@ -108,17 +108,7 @@ namespace Microsoft.Xades
 		/// <returns>Flag indicating if a member needs serialization</returns>
 		public bool HasChanged()
 		{
-			bool retVal = false;
-
-			if (this.qualifier != KnownQualifier.Uninitalized)
-			{
-				retVal = true;
-			}
-
-			if (!String.IsNullOrEmpty(this.identifierUri))
-			{
-				retVal = true;
-			}
+			bool retVal = (false || qualifier != KnownQualifier.Uninitalized) || !String.IsNullOrEmpty(identifierUri);
 
 			return retVal;
 		}
@@ -136,7 +126,7 @@ namespace Microsoft.Xades
 
 			if (xmlElement.HasAttribute("Qualifier"))
 			{
-				this.qualifier = (KnownQualifier)KnownQualifier.Parse(typeof(KnownQualifier), xmlElement.GetAttribute("Qualifier"), true);
+				this.qualifier = (KnownQualifier)Enum.Parse(typeof(KnownQualifier), xmlElement.GetAttribute("Qualifier"), true);
 			}
 			else
 			{
