@@ -30,18 +30,16 @@ namespace Tests
         [Fact]
         public void Test1()
         {
-            var caPrivKey = GenerateCACertificate("CN=root ca", out X509Certificate2 res);
-            var cert = GenerateSelfSignedCertificate("CN=127.0.01", "CN=root ca", caPrivKey);
+            var caPrivKey = GenerateCACertificate("CN=root ca", out X509Certificate2 rootCert);
+            var SignCertificate = GenerateSelfSignedCertificate("CN=127.0.0.1", "CN=root ca", caPrivKey);
 
-            Assert.True(CertUtil.VerifyCertificate(cert, res, X509RevocationMode.NoCheck));
+            Assert.True(CertUtil.VerifyCertificate(SignCertificate, rootCert, X509RevocationMode.NoCheck));
 
             //To get the location the assembly normally resides on disk or the install directory
             string path = System.Reflection.Assembly.GetExecutingAssembly().CodeBase;
 
             //once you have the path you get the directory with:
             var directory = System.IO.Path.GetDirectoryName(new Uri(path).LocalPath);
-
-            var SignCertificate = cert;
 
             FirmaXadesNet.XadesService svc = new FirmaXadesNet.XadesService();
             using (var inputStream = System.IO.File.OpenRead(Path.Combine(directory, @"Sample.xml")))
