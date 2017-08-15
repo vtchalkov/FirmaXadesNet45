@@ -271,9 +271,9 @@
             The generic XML element that represents a claimed role
             </summary>
         </member>
-        <member name="M:Microsoft.Xades.ClaimedRole.#ctor">
+        <member name="P:Microsoft.Xades.ClaimedRole.InnerText">
             <summary>
-            Default constructor
+            InnerText
             </summary>
         </member>
         <member name="M:Microsoft.Xades.ClaimedRole.HasChanged">
@@ -2294,7 +2294,7 @@
                 <para>
                     On Windows 2003, the default OID registrations are not setup for the SHA2 family of hash
                     algorithms, and this can cause the .NET Framework v3.5 SP 1 to be unable to create RSA-SHA2
-                    signatures. To fix this problem, the <see cref="!:Oid2.RegisterSha2OidInformationForRsa" />
+                    signatures. To fix this problem, the Oid2.RegisterSha2OidInformationForRsa />
                     method can be called to create the necessary OID registrations.
                 </para>
             </summary>
@@ -2310,6 +2310,44 @@
                     <item>Deformatter algorithm - <see cref="T:System.Security.Cryptography.RSAPKCS1SignatureDeformatter" /></item>
                 </list>
             </summary>
+        </member>
+        <member name="M:Microsoft.Xades.RSAPKCS1SHA256SignatureDescription.CreateDeformatter(System.Security.Cryptography.AsymmetricAlgorithm)">
+            <summary>
+            
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Xades.RSAPKCS1SHA256SignatureDescription.CreateFormatter(System.Security.Cryptography.AsymmetricAlgorithm)">
+            <summary>
+            
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.Xades.RSAPKCS1SHA512SignatureDescription">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Microsoft.Xades.RSAPKCS1SHA512SignatureDescription.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Microsoft.Xades.RSAPKCS1SHA512SignatureDescription.CreateDeformatter(System.Security.Cryptography.AsymmetricAlgorithm)">
+            <summary>
+            
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Xades.RSAPKCS1SHA512SignatureDescription.CreateFormatter(System.Security.Cryptography.AsymmetricAlgorithm)">
+            <summary>
+            
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
         </member>
         <member name="T:Microsoft.Xades.SignaturePolicyId">
             <summary>
@@ -2961,6 +2999,11 @@
         <member name="P:Microsoft.Xades.TimeStamp.TagName">
             <summary>
             The name of the element when serializing
+            </summary>
+        </member>
+        <member name="P:Microsoft.Xades.TimeStamp.Id">
+            <summary>
+            
             </summary>
         </member>
         <member name="P:Microsoft.Xades.TimeStamp.HashDataInfoCollection">

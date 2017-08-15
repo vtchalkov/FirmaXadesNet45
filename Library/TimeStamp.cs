@@ -40,8 +40,8 @@ namespace Microsoft.Xades
         private HashDataInfoCollection hashDataInfoCollection;
         private EncapsulatedPKIData encapsulatedTimeStamp;
         private XMLTimeStamp xmlTimeStamp;
-        private string prefix;
-        private string namespaceUri;
+        private readonly string prefix;
+        private readonly string namespaceUri;
         #endregion
 
         #region Public properties
@@ -60,6 +60,9 @@ namespace Microsoft.Xades
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public string Id
         {
             get
@@ -172,22 +175,11 @@ namespace Microsoft.Xades
         /// <returns>Flag indicating if a member needs serialization</returns>
         public bool HasChanged()
         {
-            bool retVal = false;
+            bool retVal = false || hashDataInfoCollection.Count > 0;
 
-            if (this.hashDataInfoCollection.Count > 0)
-            {
-                retVal = true;
-            }
+            retVal |= (encapsulatedTimeStamp != null && this.encapsulatedTimeStamp.HasChanged());
 
-            if (this.encapsulatedTimeStamp != null && this.encapsulatedTimeStamp.HasChanged())
-            {
-                retVal = true;
-            }
-
-            if (this.xmlTimeStamp != null && this.xmlTimeStamp.HasChanged())
-            {
-                retVal = true;
-            }
+            retVal |= (xmlTimeStamp != null && this.xmlTimeStamp.HasChanged());
 
             return retVal;
         }
@@ -206,7 +198,7 @@ namespace Microsoft.Xades
 
             if (xmlElement == null)
             {
-                throw new ArgumentNullException("xmlElement");
+                throw new ArgumentNullException(nameof(xmlElement));
             }
 
             if (xmlElement.HasAttribute("Id"))
@@ -239,8 +231,7 @@ namespace Microsoft.Xades
             }
             finally
             {
-                IDisposable disposable = enumerator as IDisposable;
-                if (disposable != null)
+                if (enumerator is IDisposable disposable)
                 {
                     disposable.Dispose();
                 }

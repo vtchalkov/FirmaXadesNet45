@@ -83,7 +83,7 @@ namespace Microsoft.Xades
     ///     <para>
     ///         On Windows 2003, the default OID registrations are not setup for the SHA2 family of hash
     ///         algorithms, and this can cause the .NET Framework v3.5 SP 1 to be unable to create RSA-SHA2
-    ///         signatures. To fix this problem, the <see cref="Oid2.RegisterSha2OidInformationForRsa" />
+    ///         signatures. To fix this problem, the Oid2.RegisterSha2OidInformationForRsa />
     ///         method can be called to create the necessary OID registrations.
     ///     </para>
     /// </summary>
@@ -109,20 +109,30 @@ namespace Microsoft.Xades
             DeformatterAlgorithm = typeof(RSAPKCS1SignatureDeformatter).FullName;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public override AsymmetricSignatureDeformatter CreateDeformatter(AsymmetricAlgorithm key)
         {
             if (key == null)
-                throw new ArgumentNullException("key");
+                throw new ArgumentNullException(nameof(key));
 
             RSAPKCS1SignatureDeformatter deformatter = new RSAPKCS1SignatureDeformatter(key);
             deformatter.SetHashAlgorithm("SHA256");
             return deformatter;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public override AsymmetricSignatureFormatter CreateFormatter(AsymmetricAlgorithm key)
         {
             if (key == null)
-                throw new ArgumentNullException("key");
+                throw new ArgumentNullException(nameof(key));
 
             RSAPKCS1SignatureFormatter formatter = new RSAPKCS1SignatureFormatter(key);
             formatter.SetHashAlgorithm("SHA256");

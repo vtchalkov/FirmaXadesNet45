@@ -50,7 +50,9 @@ namespace Microsoft.Xades
 				this.anyXmlElement = value;
 			}
 		}
-
+        /// <summary>
+        /// InnerText
+        /// </summary>
 		public string InnerText
 		{
 			get
@@ -65,15 +67,6 @@ namespace Microsoft.Xades
 		}
 		#endregion
 
-		#region Constructors
-		/// <summary>
-		/// Default constructor
-		/// </summary>
-		public ClaimedRole()
-		{
-		}
-		#endregion
-
 		#region Public methods
 		/// <summary>
 		/// Check to see if something has changed in this instance and needs to be serialized
@@ -81,17 +74,7 @@ namespace Microsoft.Xades
 		/// <returns>Flag indicating if a member needs serialization</returns>
 		public bool HasChanged()
 		{
-			bool retVal = false;
-
-			if (this.anyXmlElement != null)
-			{
-				retVal = true;
-			}
-
-            if (!string.IsNullOrEmpty(this.innerText))
-            {
-                retVal = true;
-            }
+			bool retVal = (false || this.anyXmlElement != null) || !string.IsNullOrEmpty(this.innerText);
 
 			return retVal;
 		}

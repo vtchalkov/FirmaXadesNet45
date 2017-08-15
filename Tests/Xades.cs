@@ -101,11 +101,10 @@ namespace Tests
 
             // Signature Algorithm
             const string signatureAlgorithm = "SHA256WithRSA";
-            certificateGenerator.SetSignatureAlgorithm(signatureAlgorithm);
 
             // Issuer and Subject Name
             var subjectDN = new X509Name(subjectName);
-            var issuerDN = new X509Name (issuerName);
+            var issuerDN = new X509Name(issuerName);
             certificateGenerator.SetIssuerDN(issuerDN);
             certificateGenerator.SetSubjectDN(subjectDN);
 
@@ -115,6 +114,7 @@ namespace Tests
 
             certificateGenerator.SetNotBefore(notBefore);
             certificateGenerator.SetNotAfter(notAfter);
+
 
             // Subject Public Key
             AsymmetricCipherKeyPair subjectKeyPair;
@@ -128,12 +128,14 @@ namespace Tests
             // Generating the Certificate
             var issuerKeyPair = subjectKeyPair;
 
+            // create key factory
+            ISignatureFactory signatureFactory = new Asn1SignatureFactory(signatureAlgorithm, issuerPrivKey, random);
+
             // selfsign certificate
-            var certificate = certificateGenerator.Generate(issuerPrivKey, random);
+            var certificate = certificateGenerator.Generate(signatureFactory);
 
             // correcponding private key
             PrivateKeyInfo info = PrivateKeyInfoFactory.CreatePrivateKeyInfo(subjectKeyPair.Private);
-
 
             // merge into X509Certificate2
             var x509 = new System.Security.Cryptography.X509Certificates.X509Certificate2(certificate.GetEncoded());
@@ -148,7 +150,6 @@ namespace Tests
 
             x509.PrivateKey = DotNetUtilities.ToRSA(rsaparams);
             return x509;
-
         }
 
 

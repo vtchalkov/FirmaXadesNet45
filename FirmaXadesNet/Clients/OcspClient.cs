@@ -244,7 +244,7 @@ namespace FirmaXadesNet.Clients
                 ocspRequestGenerator.SetRequestorName(requestorName);
             }
 
-            ArrayList oids = new ArrayList();
+            List<DerObjectIdentifier> oids = new List<DerObjectIdentifier>();
             Hashtable values = new Hashtable();
 
             oids.Add(OcspObjectIdentifiers.PkixOcspNonce);
