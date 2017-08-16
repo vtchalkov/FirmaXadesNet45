@@ -742,7 +742,7 @@ namespace FirmaXadesNet
 
 
         private void AddSignatureProperties(SignatureDocument sigDocument, SignedSignatureProperties signedSignatureProperties, SignedDataObjectProperties signedDataObjectProperties,
-                   UnsignedSignatureProperties unsignedSignatureProperties, SignatureParameters parameters)
+                   UnsignedSignatureProperties unsignedSignatureProperties, SignatureParameters parameters) //todo: unsignedSignatureProperties is never used
         {
             Cert cert;
 

@@ -50,6 +50,7 @@ namespace Tests
         [Repeat(10)]
         public void SimpleXadesTSign(object input)
         {
+            Console.WriteLine(input.ToString());
             Assert.True(CertUtil.VerifyCertificate(_signCertificate, _rootCert, X509RevocationMode.NoCheck));
             using (var inputStream = System.IO.File.OpenRead(Path.Combine(rootDirectory, @"Sample.xml")))
             {
@@ -117,8 +118,10 @@ namespace Tests
         void ValidateDocument(string xml)
         {
             FirmaXadesNet.XadesService svc = new FirmaXadesNet.XadesService();
-            XmlDocument doc = new XmlDocument();
-            doc.PreserveWhitespace = true;
+            XmlDocument doc = new XmlDocument
+            {
+                PreserveWhitespace = true
+            };
             doc.LoadXml(xml);
             var resultDoc = svc.Load(doc);
 
@@ -130,8 +133,10 @@ namespace Tests
         {
             //signedDocument.Save(@"c:\temp\xades.xml");
             FirmaXadesNet.XadesService svc = new FirmaXadesNet.XadesService();
-            XmlDocument doc = new XmlDocument();
-            doc.PreserveWhitespace = true;
+            XmlDocument doc = new XmlDocument
+            {
+                PreserveWhitespace = true
+            };
             doc.LoadXml(xml);
             var resultDoc = svc.Load(doc);
 
