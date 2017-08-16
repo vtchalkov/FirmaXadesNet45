@@ -21,6 +21,7 @@ using Org.BouncyCastle.X509;
 using System;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
+using System.Xml;
 using Xunit;
 
 namespace Tests
@@ -40,48 +41,62 @@ namespace Tests
 
             //once you have the path you get the directory with:
             var directory = System.IO.Path.GetDirectoryName(new Uri(path).LocalPath);
-
-            FirmaXadesNet.XadesService svc = new FirmaXadesNet.XadesService();
             using (var inputStream = System.IO.File.OpenRead(Path.Combine(directory, @"Sample.xml")))
             {
-                var parameters = new FirmaXadesNet.Signature.Parameters.SignatureParameters()
+                var result = SignDocument(SignCertificate, inputStream, new SignatureProductionPlace
                 {
-                    SignatureMethod = SignatureMethod.RSAwithSHA256,
-                    SigningDate = DateTime.Now,
-                    SignaturePackaging = SignaturePackaging.ENVELOPED,
-                    InputMimeType = "text/xml",
-                    SignatureProductionPlace = new SignatureProductionPlace
-                    {
-                        City = "Sofia",
-                        CountryName = "Bulgaria",
-                        PostalCode = "1303",
-                        StateOrProvince = "Sofia"
-                    }
-                };
-                parameters.SignatureCommitments.Add(new SignatureCommitment(SignatureCommitmentType.ProofOfOrigin));
-
-                using (parameters.Signer = new Signer(SignCertificate))
-                {
-                    var signedDocument = svc.Sign(inputStream, parameters);
-                    signedDocument.Document.PreserveWhitespace = true;
-                    UpgradeParameters xadesTparameters = new UpgradeParameters()
-                    {
-                        TimeStampClient = new TimeStampClient("https://freetsa.org/tsr")
-                    };
-                    XadesUpgraderService upgrader = new XadesUpgraderService();
-                    upgrader.Upgrade(signedDocument, SignatureFormat.XAdES_T, xadesTparameters);
-                    signedDocument.Save(@"c:\temp\xades.xml");
-
-                    var resultDoc = svc.Load(@"c:\temp\xades.xml");
-
-                    var result = resultDoc[0].XadesSignature.XadesCheckSignature(Microsoft.Xades.XadesCheckSignatureMasks.AllChecks);
-                    Assert.True(result);
-                    var result2 = svc.Validate(resultDoc[0]);
-                    Assert.True(result2.IsValid);
-                }
+                    City = "Sofia",
+                    CountryName = "Bulgaria",
+                    PostalCode = "1303",
+                    StateOrProvince = "Sofia"
+                });
+                ValidateDocument(result);
             }
-            
-          
+        }
+
+        private static string SignDocument(X509Certificate2 SignCertificate, System.IO.Stream inputStream, SignatureProductionPlace signatureProductionPlace, string timeStampUrl = "https://freetsa.org/tsr")
+        {
+            FirmaXadesNet.XadesService svc = new FirmaXadesNet.XadesService();
+
+            var parameters = new FirmaXadesNet.Signature.Parameters.SignatureParameters()
+            {
+                SignatureMethod = SignatureMethod.RSAwithSHA256,
+                SigningDate = DateTime.Now,
+                SignaturePackaging = SignaturePackaging.ENVELOPED,
+                InputMimeType = "text/xml",
+                SignatureProductionPlace = signatureProductionPlace
+            };
+            parameters.SignatureCommitments.Add(new SignatureCommitment(SignatureCommitmentType.ProofOfOrigin));
+
+            using (parameters.Signer = new Signer(SignCertificate))
+            {
+                var signedDocument = svc.Sign(inputStream, parameters);
+                signedDocument.Document.PreserveWhitespace = true;
+                UpgradeParameters xadesTparameters = new UpgradeParameters()
+                {
+                    TimeStampClient = new TimeStampClient(timeStampUrl)
+                };
+                XadesUpgraderService upgrader = new XadesUpgraderService();
+                upgrader.Upgrade(signedDocument, SignatureFormat.XAdES_T, xadesTparameters);
+
+                return signedDocument.Document.OuterXml;
+
+            }
+
+        }
+
+        private static void ValidateDocument(string xml)
+        {
+            //signedDocument.Save(@"c:\temp\xades.xml");
+            FirmaXadesNet.XadesService svc = new FirmaXadesNet.XadesService();
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(xml);
+            var resultDoc = svc.Load(doc);
+
+            var result = resultDoc[0].XadesSignature.XadesCheckSignature(Microsoft.Xades.XadesCheckSignatureMasks.AllChecks);
+            Assert.True(result);
+            var result2 = svc.Validate(resultDoc[0]);
+            Assert.True(result2.IsValid);
         }
 
         public static X509Certificate2 GenerateSelfSignedCertificate(string subjectName, string issuerName, AsymmetricKeyParameter issuerPrivKey, int keyStrength = 2048)
