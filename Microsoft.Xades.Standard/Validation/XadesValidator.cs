@@ -37,22 +37,22 @@ namespace FirmaXadesNet.Validation
     {
         #region Public methods
 
+        /// <summary>
+        /// The elements that are validated are:
+        /// 1.The traces of the references of the signature.
+        /// 2.The trace of the SignedInfo element is verified and the signature is verified with the public key of the ///certificate.
+        /// 3. If the signature contains a time stamp it is verified that the imprint of the signature coincides with that of the time stamp.
+        /// The validation of profiles -C, -X, -XL and -A is outside the scope of this project.
+        /// </summary>
+        /// <param name="sigDocument"></param>
+        /// <returns></returns>
         public ValidationResult Validate(SignatureDocument sigDocument)
         {
-            /* Los elementos que se validan son:
-             * 
-             * 1. Las huellas de las referencias de la firma.
-             * 2. Se comprueba la huella del elemento SignedInfo y se verifica la firma con la clave pública del certificado.
-             * 3. Si la firma contiene un sello de tiempo se comprueba que la huella de la firma coincide con la del sello de tiempo.
-             * 
-             * La validación de perfiles -C, -X, -XL y -A esta fuera del ámbito de este proyecto.
-             */
-            
             ValidationResult result = new ValidationResult();
-                       
+
             try
-            {                
-                // Verifica las huellas de las referencias y la firma
+            {
+                // Check the traces of references and signature
                 sigDocument.XadesSignature.CheckXmldsigSignature();
             }
             catch
@@ -62,11 +62,10 @@ namespace FirmaXadesNet.Validation
 
                 return result;
             }
-            
+
             if (sigDocument.XadesSignature.UnsignedProperties.UnsignedSignatureProperties.SignatureTimeStampCollection.Count > 0)
             {
-                // Se comprueba el sello de tiempo
-
+                // Check time stamp
                 TimeStamp timeStamp = sigDocument.XadesSignature.UnsignedProperties.UnsignedSignatureProperties.SignatureTimeStampCollection[0];
                 TimeStampToken token = new TimeStampToken(new CmsSignedData(timeStamp.EncapsulatedTimeStamp.PkiData));
 
@@ -82,14 +81,14 @@ namespace FirmaXadesNet.Validation
                 if (!Arrays.AreEqual(tsHashValue, signatureValueHash))
                 {
                     result.IsValid = false;
-                    result.Message = "La huella del sello de tiempo no se corresponde con la calculada";
+                    result.Message = "The imprint of the time stamp does not correspond with the calculated";
 
                     return result;
                 }
             }
 
             result.IsValid = true;
-            result.Message = "Verificación de la firma satisfactoria";
+            result.Message = "Signature validated successfully";
 
             return result;
         }

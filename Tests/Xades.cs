@@ -19,31 +19,41 @@ using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Utilities;
 using Org.BouncyCastle.X509;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using System.Xml;
 using Xunit;
+using Xunit.Sdk;
 
 namespace Tests
 {
     public class Xades
     {
-        [Fact]
-        public void Test1()
+        X509Certificate2 _signCertificate;
+        AsymmetricKeyParameter _caPrivKey;
+        X509Certificate2 _rootCert;
+        string rootDirectory;
+        public Xades()
         {
-            var caPrivKey = GenerateCACertificate("CN=root ca", out X509Certificate2 rootCert);
-            var SignCertificate = GenerateSelfSignedCertificate("CN=127.0.0.1", "CN=root ca", caPrivKey);
-
-            Assert.True(CertUtil.VerifyCertificate(SignCertificate, rootCert, X509RevocationMode.NoCheck));
-
+            _caPrivKey = GenerateCACertificate("CN=root ca", out _rootCert);
+            _signCertificate = GenerateSelfSignedCertificate("CN=127.0.0.1", "CN=root ca", _caPrivKey);
             //To get the location the assembly normally resides on disk or the install directory
-            string path = System.Reflection.Assembly.GetExecutingAssembly().CodeBase;
-
+            var rootPath = System.Reflection.Assembly.GetExecutingAssembly().CodeBase;
             //once you have the path you get the directory with:
-            var directory = System.IO.Path.GetDirectoryName(new Uri(path).LocalPath);
-            using (var inputStream = System.IO.File.OpenRead(Path.Combine(directory, @"Sample.xml")))
+            rootDirectory = System.IO.Path.GetDirectoryName(new Uri(rootPath).LocalPath);
+        }
+        [Theory]
+        [Repeat(10)]
+        public void SimpleXadesTSign(object input)
+        {
+            Assert.True(CertUtil.VerifyCertificate(_signCertificate, _rootCert, X509RevocationMode.NoCheck));
+            using (var inputStream = System.IO.File.OpenRead(Path.Combine(rootDirectory, @"Sample.xml")))
             {
-                var result = SignDocument(SignCertificate, inputStream, new SignatureProductionPlace
+                var result = SignDocument(_signCertificate, inputStream, new SignatureProductionPlace
                 {
                     City = "Sofia",
                     CountryName = "Bulgaria",
@@ -51,10 +61,29 @@ namespace Tests
                     StateOrProvince = "Sofia"
                 }, "https://freetsa.org/tsr");
                 ValidateDocument(result);
+                ValidateDocumentSignatureOnly(result);
             }
         }
 
-        private static string SignDocument(X509Certificate2 SignCertificate, System.IO.Stream inputStream, SignatureProductionPlace signatureProductionPlace, string timeStampUrl = "https://freetsa.org/tsr")
+        [Fact]
+        public void SimpleXadesTSignWithFile()
+        {
+            Assert.True(CertUtil.VerifyCertificate(_signCertificate, _rootCert, X509RevocationMode.NoCheck));
+            using (var inputStream = System.IO.File.OpenRead(Path.Combine(rootDirectory, @"SampleWithFile.xml")))
+            {
+                var result = SignDocument(_signCertificate, inputStream, new SignatureProductionPlace
+                {
+                    City = "Sofia",
+                    CountryName = "Bulgaria",
+                    PostalCode = "1303",
+                    StateOrProvince = "Sofia"
+                }, "https://freetsa.org/tsr");
+                ValidateDocument(result);
+                ValidateDocumentSignatureOnly(result);
+            }
+        }
+
+        string SignDocument(X509Certificate2 signCertificate, System.IO.Stream inputStream, SignatureProductionPlace signatureProductionPlace, string timeStampUrl = "https://freetsa.org/tsr")
         {
             FirmaXadesNet.XadesService svc = new FirmaXadesNet.XadesService();
 
@@ -68,7 +97,7 @@ namespace Tests
             };
             parameters.SignatureCommitments.Add(new SignatureCommitment(SignatureCommitmentType.ProofOfOrigin));
 
-            using (parameters.Signer = new Signer(SignCertificate))
+            using (parameters.Signer = new Signer(signCertificate))
             {
                 var signedDocument = svc.Sign(inputStream, parameters);
                 signedDocument.Document.PreserveWhitespace = true;
@@ -85,21 +114,32 @@ namespace Tests
 
         }
 
-        private static void ValidateDocument(string xml)
+        void ValidateDocument(string xml)
+        {
+            FirmaXadesNet.XadesService svc = new FirmaXadesNet.XadesService();
+            XmlDocument doc = new XmlDocument();
+            doc.PreserveWhitespace = true;
+            doc.LoadXml(xml);
+            var resultDoc = svc.Load(doc);
+
+            
+            var result2 = svc.Validate(resultDoc[0]);
+            Assert.True(result2.IsValid);
+        }
+        void ValidateDocumentSignatureOnly(string xml)
         {
             //signedDocument.Save(@"c:\temp\xades.xml");
             FirmaXadesNet.XadesService svc = new FirmaXadesNet.XadesService();
             XmlDocument doc = new XmlDocument();
+            doc.PreserveWhitespace = true;
             doc.LoadXml(xml);
             var resultDoc = svc.Load(doc);
 
             var result = resultDoc[0].XadesSignature.XadesCheckSignature(Microsoft.Xades.XadesCheckSignatureMasks.AllChecks);
             Assert.True(result);
-            var result2 = svc.Validate(resultDoc[0]);
-            Assert.True(result2.IsValid);
+            
         }
-
-        public static X509Certificate2 GenerateSelfSignedCertificate(string subjectName, string issuerName, AsymmetricKeyParameter issuerPrivKey, int keyStrength = 2048)
+        X509Certificate2 GenerateSelfSignedCertificate(string subjectName, string issuerName, AsymmetricKeyParameter issuerPrivKey, int keyStrength = 2048)
         {
             // Generating Random Numbers
             var randomGenerator = new CryptoApiRandomGenerator();
@@ -166,7 +206,7 @@ namespace Tests
         }
 
 
-        public static AsymmetricKeyParameter GenerateCACertificate(string subjectName, out X509Certificate2 rootCertificate, int keyStrength = 2048)
+        AsymmetricKeyParameter GenerateCACertificate(string subjectName, out X509Certificate2 rootCertificate, int keyStrength = 2048)
         {
             // Generating Random Numbers
             var randomGenerator = new CryptoApiRandomGenerator();
@@ -214,6 +254,26 @@ namespace Tests
             var certificate = certificateGenerator.Generate(signatureFactory);
             rootCertificate = new System.Security.Cryptography.X509Certificates.X509Certificate2(certificate.GetEncoded());
             return issuerKeyPair.Private;
+        }
+    }
+
+    public sealed class RepeatAttribute : DataAttribute
+    {
+        private readonly int _count;
+
+        public RepeatAttribute(int count)
+        {
+            if (count < 1)
+            {
+                throw new ArgumentOutOfRangeException(nameof(count),
+                      "Repeat count must be greater than 0.");
+            }
+            _count = count;
+        }
+
+        public override IEnumerable<object[]> GetData(MethodInfo testMethod)
+        {
+            return Enumerable.Range(0, _count).Select(item => new object[] { (object)item });
         }
     }
 }
