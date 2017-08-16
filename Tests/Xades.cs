@@ -49,7 +49,7 @@ namespace Tests
                     CountryName = "Bulgaria",
                     PostalCode = "1303",
                     StateOrProvince = "Sofia"
-                });
+                }, "https://freetsa.org/tsr");
                 ValidateDocument(result);
             }
         }
