@@ -84,6 +84,25 @@ namespace Tests
             }
         }
 
+        //C:\Work\IMEONTFS\Imeon\ElectronicDocuments\External
+
+        [Fact]
+        public void TestWithedoc1cert()
+        {
+            using (var inputStream = System.IO.File.OpenRead(Path.Combine(rootDirectory, @"SampleWithFile.xml")))
+            {
+                var result = SignDocument(new X509Certificate2(@"C:\Work\IMEONTFS\Imeon\ElectronicDocuments\External\eDoc2.pfx", "pass@word1"), inputStream, new SignatureProductionPlace
+                {
+                    City = "Sofia",
+                    CountryName = "Bulgaria",
+                    PostalCode = "1303",
+                    StateOrProvince = "Sofia"
+                }, "https://freetsa.org/tsr");
+                //ValidateDocument(result);
+                //ValidateDocumentSignatureOnly(result);
+            }
+        }
+
         string SignDocument(X509Certificate2 signCertificate, System.IO.Stream inputStream, SignatureProductionPlace signatureProductionPlace, string timeStampUrl = "https://freetsa.org/tsr")
         {
             FirmaXadesNet.XadesService svc = new FirmaXadesNet.XadesService();
@@ -125,7 +144,7 @@ namespace Tests
             doc.LoadXml(xml);
             var resultDoc = svc.Load(doc);
 
-            
+
             var result2 = svc.Validate(resultDoc[0]);
             Assert.True(result2.IsValid);
         }
@@ -142,7 +161,7 @@ namespace Tests
 
             var result = resultDoc[0].XadesSignature.XadesCheckSignature(Microsoft.Xades.XadesCheckSignatureMasks.AllChecks);
             Assert.True(result);
-            
+
         }
         X509Certificate2 GenerateSelfSignedCertificate(string subjectName, string issuerName, AsymmetricKeyParameter issuerPrivKey, int keyStrength = 2048)
         {

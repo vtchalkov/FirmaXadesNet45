@@ -45,9 +45,9 @@ namespace FirmaXadesNet.Utils
     /// </summary>
     static class OcspReqGeneratorExtensions
     {
-
-        public static OcspReq Generate(this OcspReqGenerator ocspRegGenerator,                    
-                    RSACryptoServiceProvider rsa,
+        // todo: add unit test for OCSP (possible regressions with using RSA instead of RSACryptoServiceProvider)
+        public static OcspReq Generate(this OcspReqGenerator ocspRegGenerator,
+                    RSA rsa,
                     X509Chain chain)
         {
             Asn1EncodableVector requests = new Asn1EncodableVector();
@@ -102,7 +102,7 @@ namespace FirmaXadesNet.Utils
                 {
                     byte[] encoded = tbsReq.GetEncoded();
 
-                    byte[] signedData = rsa.SignData(encoded, new SHA1CryptoServiceProvider());
+                    byte[] signedData = rsa.SignData(encoded, HashAlgorithmName.SHA1, RSASignaturePadding.Pkcs1);
 
                     bitSig = new DerBitString(signedData);
                 }
