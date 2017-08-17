@@ -11,11 +11,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestFirmaXades", "TestFirma
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoFacturae", "DemoFacturae\DemoFacturae.csproj", "{34F914A8-5116-45E3-B56A-1246E8C97EBC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoFirmaElemento", "DemoFirmaElemento\DemoFirmaElemento.csproj", "{1AD6C6B7-725B-4DF3-A377-FA8AEECA3160}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{C50C30EC-42B5-4937-8C93-4D30EE100C24}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xades.Standard", "Xades.Standard\Xades.Standard.csproj", "{DF516660-3C4F-4645-ABBA-8AAE06213A01}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xades.Standard", "Xades.Standard\Xades.Standard.csproj", "{DF516660-3C4F-4645-ABBA-8AAE06213A01}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -67,16 +65,6 @@ Global
 		{34F914A8-5116-45E3-B56A-1246E8C97EBC}.Release|Mixed Platforms.Build.0 = Release|x86
 		{34F914A8-5116-45E3-B56A-1246E8C97EBC}.Release|x86.ActiveCfg = Release|x86
 		{34F914A8-5116-45E3-B56A-1246E8C97EBC}.Release|x86.Build.0 = Release|x86
-		{1AD6C6B7-725B-4DF3-A377-FA8AEECA3160}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1AD6C6B7-725B-4DF3-A377-FA8AEECA3160}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1AD6C6B7-725B-4DF3-A377-FA8AEECA3160}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{1AD6C6B7-725B-4DF3-A377-FA8AEECA3160}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{1AD6C6B7-725B-4DF3-A377-FA8AEECA3160}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{1AD6C6B7-725B-4DF3-A377-FA8AEECA3160}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1AD6C6B7-725B-4DF3-A377-FA8AEECA3160}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1AD6C6B7-725B-4DF3-A377-FA8AEECA3160}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{1AD6C6B7-725B-4DF3-A377-FA8AEECA3160}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{1AD6C6B7-725B-4DF3-A377-FA8AEECA3160}.Release|x86.ActiveCfg = Release|Any CPU
 		{C50C30EC-42B5-4937-8C93-4D30EE100C24}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C50C30EC-42B5-4937-8C93-4D30EE100C24}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C50C30EC-42B5-4937-8C93-4D30EE100C24}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU

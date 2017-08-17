@@ -79,6 +79,9 @@
     <Content Include="SampleWithFile.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="xsdBOE-A-2011-13169_ex_XAdES_Internally_detached.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Xades.Standard\Xades.Standard.csproj">
