@@ -120,6 +120,35 @@ namespace Tests
 
         }
 
+        [Fact]
+        public void RunInvoiceSignature()
+        {
+            XadesService xadesService = new XadesService();
+            SignatureParameters parametros = new SignatureParameters();
+
+            string ficheroFactura = Path.Combine(rootDirectory, @"Facturae.xml");
+
+            // Política de firma de factura-e 3.1
+            parametros.SignaturePolicyInfo = new SignaturePolicyInfo
+            {
+                PolicyIdentifier = "http://www.facturae.es/politica_de_firma_formato_facturae/politica_de_firma_formato_facturae_v3_1.pdf",
+                PolicyHash = "Ohixl6upD6av8N7pEvDABhEL6hM="
+            };
+            parametros.SignaturePackaging = SignaturePackaging.ENVELOPED;
+            parametros.InputMimeType = "text/xml";
+            parametros.SignerRole = new SignerRole();
+            parametros.SignerRole.ClaimedRoles.Add("emisor");
+
+            using (parametros.Signer = new Signer(_signCertificate))
+            {
+                using (FileStream fs = new FileStream(ficheroFactura, FileMode.Open))
+                {
+                    var docFirmado = xadesService.Sign(fs, parametros);
+                    ValidateDocument(docFirmado.Document.OuterXml);
+                }
+            }
+        }
+
         string SignDocument(X509Certificate2 signCertificate, System.IO.Stream inputStream, SignatureProductionPlace signatureProductionPlace, string timeStampUrl = "https://freetsa.org/tsr")
         {
             FirmaXadesNet.XadesService svc = new FirmaXadesNet.XadesService();
