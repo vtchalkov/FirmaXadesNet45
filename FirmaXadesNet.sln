@@ -15,7 +15,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoFirmaElemento", "DemoFi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{C50C30EC-42B5-4937-8C93-4D30EE100C24}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xades.Standard", "Microsoft.Xades.Standard\Xades.Standard.csproj", "{DF516660-3C4F-4645-ABBA-8AAE06213A01}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xades.Standard", "Xades.Standard\Xades.Standard.csproj", "{DF516660-3C4F-4645-ABBA-8AAE06213A01}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

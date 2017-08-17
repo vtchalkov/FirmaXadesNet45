@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Microsoft.France.Xades\XMLTimeStamp.cs">
+    <Compile Update="Xades\XMLTimeStamp.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

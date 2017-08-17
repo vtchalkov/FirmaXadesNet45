@@ -81,7 +81,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Microsoft.Xades.Standard\Xades.Standard.csproj">
+    <ProjectReference Include="..\Xades.Standard\Xades.Standard.csproj">
       <Project>{df516660-3c4f-4645-abba-8aae06213a01}</Project>
       <Name>Xades.Standard</Name>
     </ProjectReference>
