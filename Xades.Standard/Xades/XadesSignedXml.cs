@@ -1554,7 +1554,7 @@ namespace Microsoft.Xades
             Reference contentRef = GetContentReference();
 
             if (!string.IsNullOrEmpty(contentRef.Uri) &&
-                contentRef.Uri.StartsWith("#", StringComparison.InvariantCulture))
+                contentRef.Uri.StartsWith("#", StringComparison.InvariantCultureIgnoreCase))
             {
                 contentElement = GetIdElement(this.signatureDocument, contentRef.Uri.Substring(1));
             }

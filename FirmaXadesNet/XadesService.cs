@@ -38,7 +38,7 @@ using System.Xml;
 namespace FirmaXadesNet
 {
 
-    public class XadesService 
+    public class XadesService
     {
 
         #region Private variables
@@ -272,7 +272,7 @@ namespace FirmaXadesNet
         /// <param name="input"></param>
         /// <returns></returns>
         public SignatureDocument[] Load(Stream input)
-        {           
+        {
             return Load(XMLUtil.LoadDocument(input));
         }
 
@@ -314,7 +314,7 @@ namespace FirmaXadesNet
 
                 firmas.Add(sigDocument);
             }
-            
+
             return firmas.ToArray();
         }
 
@@ -330,7 +330,7 @@ namespace FirmaXadesNet
         public ValidationResult Validate(SignatureDocument sigDocument)
         {
             SignatureDocument.CheckSignatureDocument(sigDocument);
-            
+
             XadesValidator validator = new XadesValidator();
 
             return validator.Validate(sigDocument);
@@ -391,10 +391,13 @@ namespace FirmaXadesNet
             sigDocument.XadesSignature.AddReference(_refContent);
         }
 
+
+
         /// <summary>
         /// Inserta un documento para generar una firma internally detached.
         /// </summary>
-        /// <param name="content"></param>
+        /// <param name="sigDocument"></param>
+        /// <param name="input"></param>
         /// <param name="mimeType"></param>
         private void SetContentInternallyDetached(SignatureDocument sigDocument, Stream input, string mimeType)
         {
@@ -450,7 +453,7 @@ namespace FirmaXadesNet
                         input.CopyTo(ms);
                         contentElement.InnerText = Convert.ToBase64String(ms.ToArray());
                     }
-                    
+
                 }
             }
 
@@ -493,7 +496,7 @@ namespace FirmaXadesNet
 
             _refContent.Id = "Reference-" + Guid.NewGuid().ToString();
             _refContent.Uri = "#" + dataObjectId;
-            _refContent.Type = XadesSignedXml.XmlDsigObjectType; 
+            _refContent.Type = XadesSignedXml.XmlDsigObjectType;
 
             XmlDsigC14NTransform transform = new XmlDsigC14NTransform();
             _refContent.AddTransform(transform);
@@ -504,12 +507,11 @@ namespace FirmaXadesNet
             sigDocument.XadesSignature.AddReference(_refContent);
         }
 
-
         /// <summary>
         /// Especifica el nodo en el cual se añadira la firma
         /// </summary>
-        /// <param name="elementXPath"></param>
-        /// <param name="namespaces"></param>
+        /// <param name="sigDocument"></param>
+        /// <param name="destination"></param>
         private void SetSignatureDestination(SignatureDocument sigDocument, SignatureXPathExpression destination)
         {
             XmlNode nodo;
@@ -552,7 +554,7 @@ namespace FirmaXadesNet
             _refContent.Uri = new Uri(fileName).AbsoluteUri;
             _refContent.Id = "Reference-" + Guid.NewGuid().ToString();
 
-            if (_refContent.Uri.EndsWith(".xml") || _refContent.Uri.EndsWith(".XML"))
+            if (_refContent.Uri.EndsWith(".xml", StringComparison.InvariantCultureIgnoreCase) || _refContent.Uri.EndsWith(".XML", StringComparison.InvariantCultureIgnoreCase))
             {
                 _mimeType = "text/xml";
                 _refContent.AddTransform(new XmlDsigC14NTransform());
@@ -696,7 +698,7 @@ namespace FirmaXadesNet
 
 
         private void AddCertificateInfo(SignatureDocument sigDocument, SignatureParameters parameters)
-        {            
+        {
             sigDocument.XadesSignature.SigningKey = parameters.Signer.SigningKey;
 
             KeyInfo keyInfo = new KeyInfo();

@@ -573,7 +573,7 @@ namespace FirmaXadesNet
             _refContent.Uri = new Uri(fileName).AbsoluteUri;
             _refContent.Id = "Reference-" + Guid.NewGuid().ToString();
 
-            if (_refContent.Uri.EndsWith(".xml", StringComparison.InvariantCulture) || _refContent.Uri.EndsWith(".XML", StringComparison.InvariantCulture))
+            if (_refContent.Uri.EndsWith(".xml", StringComparison.InvariantCultureIgnoreCase) || _refContent.Uri.EndsWith(".XML", StringComparison.InvariantCultureIgnoreCase))
             {
                 _mimeType = "text/xml";
                 _refContent.AddTransform(new XmlDsigC14NTransform());

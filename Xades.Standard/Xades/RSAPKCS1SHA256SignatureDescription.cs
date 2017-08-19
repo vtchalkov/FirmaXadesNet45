@@ -32,8 +32,7 @@ namespace Microsoft.Xades
     ///         for RSA-SHA256 signatures. It allows XML digital signatures to be produced using the
     ///         http://www.w3.org/2001/04/xmldsig-more#rsa-sha256 signature type.
     ///         RSAPKCS1SHA256SignatureDescription provides the same interface as other signature description
-    ///         implementations shipped with the .NET Framework, such as
-    ///         <see cref="RSAPKCS1SHA1SignatureDescription" />.
+    ///         implementations shipped with the .NET Framework/>.
     ///     </para>
     ///     <para>
     ///         RSAPKCS1SHA256SignatureDescription is not generally intended for use on its own, instead it
