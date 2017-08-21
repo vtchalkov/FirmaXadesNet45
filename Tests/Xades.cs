@@ -48,7 +48,7 @@ namespace Tests
             rootDirectory = System.IO.Path.GetDirectoryName(new Uri(rootPath).LocalPath);
         }
         [Theory]
-        [Repeat(10)]
+        [Repeat(1)]
         public void SimpleXadesTSign(object input)
         {
             Console.WriteLine(input.ToString());
@@ -61,7 +61,7 @@ namespace Tests
                     CountryName = "Bulgaria",
                     PostalCode = "1303",
                     StateOrProvince = "Sofia"
-                }, "https://freetsa.org/tsr");
+                }, "http://timestamp.comodoca.com/rfc3161");
                 ValidateDocument(result);
                 ValidateDocumentSignatureOnly(result);
             }
@@ -70,21 +70,52 @@ namespace Tests
         [Fact]
         public void SimpleXadesTSignWithFile()
         {
-            Assert.True(CertUtil.VerifyCertificate(_signCertificate, _rootCert, X509RevocationMode.NoCheck));
+            X509Store my = new X509Store(StoreName.My, StoreLocation.CurrentUser);
+            my.Open(OpenFlags.ReadOnly);
+            var signCertificate = my.Certificates.Find(X509FindType.FindBySerialNumber, "3600000024614590f115537e5f000000000024", true)[0];
+            var rootCertificate = my.Certificates.Find(X509FindType.FindBySerialNumber, "13d930c77129a28949871e02de5a2aab", true)[0];
+
+            Assert.True(CertUtil.VerifyCertificate(signCertificate, rootCertificate, X509RevocationMode.NoCheck));
             using (var inputStream = System.IO.File.OpenRead(Path.Combine(rootDirectory, @"SampleWithFile.xml")))
             {
-                var result = SignDocument(_signCertificate, inputStream, new SignatureProductionPlace
+                var result = SignDocument(signCertificate, inputStream, new SignatureProductionPlace
                 {
                     City = "Sofia",
                     CountryName = "Bulgaria",
                     PostalCode = "1303",
                     StateOrProvince = "Sofia"
-                }, "https://freetsa.org/tsr");
+                }, "http://timestamp.comodoca.com/rfc3161");
+                System.IO.File.WriteAllText(@"c:\temp\xades-t.xml", result);
                 ValidateDocument(result);
                 ValidateDocumentSignatureOnly(result);
             }
         }
-        
+
+        [Fact]
+        public void SimpleXadesXLSignWithFile()
+        {
+            X509Store my = new X509Store(StoreName.My, StoreLocation.CurrentUser);
+            my.Open(OpenFlags.ReadOnly);
+            var signCertificate = my.Certificates.Find(X509FindType.FindBySerialNumber, "3600000024614590f115537e5f000000000024", true)[0];
+            var rootCertificate = my.Certificates.Find(X509FindType.FindBySerialNumber, "13d930c77129a28949871e02de5a2aab", true)[0];
+
+            Assert.True(CertUtil.VerifyCertificate(signCertificate, rootCertificate, X509RevocationMode.NoCheck));
+            using (var inputStream = System.IO.File.OpenRead(Path.Combine(rootDirectory, @"SampleWithFile.xml")))
+            {
+                var result = SignDocument(signCertificate, inputStream, new SignatureProductionPlace
+                {
+                    City = "Sofia",
+                    CountryName = "Bulgaria",
+                    PostalCode = "1303",
+                    StateOrProvince = "Sofia"
+                }, "https://freetsa.org/tsr", SignatureFormat.XAdES_XL);
+                System.IO.File.WriteAllText(@"c:\temp\xades-xl.xml", result);
+                ValidateDocument(result);
+                ValidateDocumentSignatureOnly(result);
+            }
+            my.Close();
+        }
+
         [Fact]
         public void RunInternallyDetachedSignature()
         {
@@ -149,11 +180,11 @@ namespace Tests
             }
         }
 
-        string SignDocument(X509Certificate2 signCertificate, System.IO.Stream inputStream, SignatureProductionPlace signatureProductionPlace, string timeStampUrl = "https://freetsa.org/tsr")
+        string SignDocument(X509Certificate2 signCertificate, System.IO.Stream inputStream, SignatureProductionPlace signatureProductionPlace, string timeStampUrl = "https://freetsa.org/tsr", SignatureFormat format = SignatureFormat.XAdES_T)
         {
             FirmaXadesNet.XadesService svc = new FirmaXadesNet.XadesService();
 
-            var parameters = new FirmaXadesNet.Signature.Parameters.SignatureParameters()
+            var parameters = new SignatureParameters()
             {
                 SignatureMethod = SignatureMethod.RSAwithSHA256,
                 SigningDate = DateTime.Now,
@@ -171,8 +202,12 @@ namespace Tests
                 {
                     TimeStampClient = new TimeStampClient(timeStampUrl)
                 };
+                if (format == SignatureFormat.XAdES_XL)
+                {
+                    xadesTparameters.OCSPServers.Add(new OcspServer("http://srvdc06.crossroad.ltd/ocsp"));
+                }
                 XadesUpgraderService upgrader = new XadesUpgraderService();
-                upgrader.Upgrade(signedDocument, SignatureFormat.XAdES_T, xadesTparameters);
+                upgrader.Upgrade(signedDocument, format, xadesTparameters);
 
                 return signedDocument.Document.OuterXml;
 

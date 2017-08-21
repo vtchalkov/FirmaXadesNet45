@@ -100,7 +100,7 @@ namespace FirmaXadesNet.Upgraders
             {
                 byKey = false;
 
-                return new X500DistinguishedName(dt.GetObject().GetEncoded()).Name;                
+                return new X500DistinguishedName(dt.GetObject().GetEncoded()).Name;
             }
             else if (dt.TagNo == 2)
             {
@@ -149,7 +149,7 @@ namespace FirmaXadesNet.Upgraders
         }
 
         /// <summary>
-        /// Inserta en la lista de certificados el certificado y comprueba la valided del certificado.
+        /// Insert the certificate in the certificate list and check the certificate validity.
         /// </summary>
         /// <param name="cert"></param>
         /// <param name="unsignedProperties"></param>
@@ -159,8 +159,9 @@ namespace FirmaXadesNet.Upgraders
         /// <param name="digestMethod"></param>
         /// <param name="addCertificateOcspUrl"></param>
         /// <param name="extraCerts"></param>
+        /// <param name="useNonce">If true then nonce will be used. The ocsp server should support this. OCSP reposnder in Microsoft Windows must be configured explicitly to support nonce.</param>
         private void AddCertificate(X509Certificate2 cert, UnsignedProperties unsignedProperties, bool addCert, IEnumerable<OcspServer> ocspServers,
-            IEnumerable<X509Crl> crlList, FirmaXadesNet.Crypto.DigestMethod digestMethod, bool addCertificateOcspUrl, X509Certificate2[] extraCerts = null)
+            IEnumerable<X509Crl> crlList, FirmaXadesNet.Crypto.DigestMethod digestMethod, bool addCertificateOcspUrl, X509Certificate2[] extraCerts = null, bool useNonce = true)
         {
             if (addCert)
             {
@@ -199,7 +200,7 @@ namespace FirmaXadesNet.Upgraders
 
                 if (!valid)
                 {
-                    var ocspCerts = ValidateCertificateByOCSP(unsignedProperties, cert, enumerator.Current.Certificate, ocspServers, digestMethod, addCertificateOcspUrl);
+                    var ocspCerts = ValidateCertificateByOCSP(unsignedProperties, cert, enumerator.Current.Certificate, ocspServers, digestMethod, addCertificateOcspUrl, useNonce);
 
                     if (ocspCerts != null)
                     {
@@ -298,8 +299,7 @@ namespace FirmaXadesNet.Upgraders
             return false;
         }
 
-        private X509Certificate2[] ValidateCertificateByOCSP(UnsignedProperties unsignedProperties, X509Certificate2 client, X509Certificate2 issuer,
-            IEnumerable<OcspServer> ocspServers, FirmaXadesNet.Crypto.DigestMethod digestMethod, bool addCertificateOcspUrl)
+        private X509Certificate2[] ValidateCertificateByOCSP(UnsignedProperties unsignedProperties, X509Certificate2 client, X509Certificate2 issuer, IEnumerable<OcspServer> ocspServers, FirmaXadesNet.Crypto.DigestMethod digestMethod, bool addCertificateOcspUrl, bool useNonce)
         {
             bool byKey = false;
             List<OcspServer> finalOcspServers = new List<OcspServer>();
@@ -325,10 +325,10 @@ namespace FirmaXadesNet.Upgraders
 
             foreach (var ocspServer in finalOcspServers)
             {
-                byte[] resp = ocsp.QueryBinary(clientCert, issuerCert, ocspServer.Url, ocspServer.RequestorName,
+                byte[] resp = ocsp.QueryBinary(clientCert, issuerCert, ocspServer.Url, useNonce, ocspServer.RequestorName,
                     ocspServer.SignCertificate);
 
-                FirmaXadesNet.Clients.CertificateStatus status = ocsp.ProcessOcspResponse(resp);
+                FirmaXadesNet.Clients.CertificateStatus status = ocsp.ProcessOcspResponse(resp, useNonce);
 
                 if (status == FirmaXadesNet.Clients.CertificateStatus.Revoked)
                 {

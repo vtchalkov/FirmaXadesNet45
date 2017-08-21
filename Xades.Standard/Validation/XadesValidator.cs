@@ -28,7 +28,6 @@ using Microsoft.Xades;
 using Org.BouncyCastle.Cms;
 using Org.BouncyCastle.Tsp;
 using Org.BouncyCastle.Utilities;
-using System;
 using System.Collections;
 
 namespace FirmaXadesNet.Validation

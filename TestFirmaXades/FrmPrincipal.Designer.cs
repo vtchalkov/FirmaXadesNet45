@@ -67,7 +67,7 @@
             // 
             this.btnFirmar.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnFirmar.Location = new System.Drawing.Point(21, 514);
-            this.btnFirmar.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnFirmar.Margin = new System.Windows.Forms.Padding(4);
             this.btnFirmar.Name = "btnFirmar";
             this.btnFirmar.Size = new System.Drawing.Size(100, 28);
             this.btnFirmar.TabIndex = 0;
@@ -85,9 +85,9 @@
             this.groupBox1.Controls.Add(this.rbExternallyDetached);
             this.groupBox1.Controls.Add(this.rbInternnallyDetached);
             this.groupBox1.Location = new System.Drawing.Point(16, 10);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(4);
             this.groupBox1.Size = new System.Drawing.Size(808, 217);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
@@ -97,7 +97,7 @@
             // 
             this.rbEnveloping.AutoSize = true;
             this.rbEnveloping.Location = new System.Drawing.Point(17, 121);
-            this.rbEnveloping.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.rbEnveloping.Margin = new System.Windows.Forms.Padding(4);
             this.rbEnveloping.Name = "rbEnveloping";
             this.rbEnveloping.Size = new System.Drawing.Size(99, 21);
             this.rbEnveloping.TabIndex = 6;
@@ -107,7 +107,7 @@
             // btnSeleccionarFichero
             // 
             this.btnSeleccionarFichero.Location = new System.Drawing.Point(567, 174);
-            this.btnSeleccionarFichero.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnSeleccionarFichero.Margin = new System.Windows.Forms.Padding(4);
             this.btnSeleccionarFichero.Name = "btnSeleccionarFichero";
             this.btnSeleccionarFichero.Size = new System.Drawing.Size(37, 28);
             this.btnSeleccionarFichero.TabIndex = 5;
@@ -118,7 +118,7 @@
             // txtFichero
             // 
             this.txtFichero.Location = new System.Drawing.Point(17, 175);
-            this.txtFichero.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtFichero.Margin = new System.Windows.Forms.Padding(4);
             this.txtFichero.Name = "txtFichero";
             this.txtFichero.Size = new System.Drawing.Size(548, 22);
             this.txtFichero.TabIndex = 4;
@@ -137,7 +137,7 @@
             // 
             this.rbEnveloped.AutoSize = true;
             this.rbEnveloped.Location = new System.Drawing.Point(17, 92);
-            this.rbEnveloped.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.rbEnveloped.Margin = new System.Windows.Forms.Padding(4);
             this.rbEnveloped.Name = "rbEnveloped";
             this.rbEnveloped.Size = new System.Drawing.Size(96, 21);
             this.rbEnveloped.TabIndex = 2;
@@ -148,7 +148,7 @@
             // 
             this.rbExternallyDetached.AutoSize = true;
             this.rbExternallyDetached.Location = new System.Drawing.Point(17, 63);
-            this.rbExternallyDetached.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.rbExternallyDetached.Margin = new System.Windows.Forms.Padding(4);
             this.rbExternallyDetached.Name = "rbExternallyDetached";
             this.rbExternallyDetached.Size = new System.Drawing.Size(153, 21);
             this.rbExternallyDetached.TabIndex = 1;
@@ -160,7 +160,7 @@
             this.rbInternnallyDetached.AutoSize = true;
             this.rbInternnallyDetached.Checked = true;
             this.rbInternnallyDetached.Location = new System.Drawing.Point(17, 33);
-            this.rbInternnallyDetached.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.rbInternnallyDetached.Margin = new System.Windows.Forms.Padding(4);
             this.rbInternnallyDetached.Name = "rbInternnallyDetached";
             this.rbInternnallyDetached.Size = new System.Drawing.Size(149, 21);
             this.rbInternnallyDetached.TabIndex = 0;
@@ -185,11 +185,11 @@
             // txtURLSellado
             // 
             this.txtURLSellado.Location = new System.Drawing.Point(21, 261);
-            this.txtURLSellado.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtURLSellado.Margin = new System.Windows.Forms.Padding(4);
             this.txtURLSellado.Name = "txtURLSellado";
             this.txtURLSellado.Size = new System.Drawing.Size(352, 22);
             this.txtURLSellado.TabIndex = 3;
-            this.txtURLSellado.Text = "http://tss.accv.es:8318/tsa";
+            this.txtURLSellado.Text = "https://freetsa.org/tsr";
             // 
             // label3
             // 
@@ -204,16 +204,16 @@
             // txtOCSP
             // 
             this.txtOCSP.Location = new System.Drawing.Point(403, 260);
-            this.txtOCSP.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtOCSP.Margin = new System.Windows.Forms.Padding(4);
             this.txtOCSP.Name = "txtOCSP";
             this.txtOCSP.Size = new System.Drawing.Size(417, 22);
             this.txtOCSP.TabIndex = 5;
-            this.txtOCSP.Text = "http://ocsp.dnie.es";
+            this.txtOCSP.Text = "http://srvdc06.crossroad.ltd/ocsp";
             // 
             // btnXadesT
             // 
             this.btnXadesT.Location = new System.Drawing.Point(435, 549);
-            this.btnXadesT.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnXadesT.Margin = new System.Windows.Forms.Padding(4);
             this.btnXadesT.Name = "btnXadesT";
             this.btnXadesT.Size = new System.Drawing.Size(192, 28);
             this.btnXadesT.TabIndex = 6;
@@ -224,7 +224,7 @@
             // btnXadesXL
             // 
             this.btnXadesXL.Location = new System.Drawing.Point(643, 549);
-            this.btnXadesXL.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnXadesXL.Margin = new System.Windows.Forms.Padding(4);
             this.btnXadesXL.Name = "btnXadesXL";
             this.btnXadesXL.Size = new System.Drawing.Size(179, 28);
             this.btnXadesXL.TabIndex = 7;
@@ -235,7 +235,7 @@
             // btnGuardarFirma
             // 
             this.btnGuardarFirma.Location = new System.Drawing.Point(692, 486);
-            this.btnGuardarFirma.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnGuardarFirma.Margin = new System.Windows.Forms.Padding(4);
             this.btnGuardarFirma.Name = "btnGuardarFirma";
             this.btnGuardarFirma.Size = new System.Drawing.Size(129, 28);
             this.btnGuardarFirma.TabIndex = 8;
@@ -246,7 +246,7 @@
             // btnCargarFirma
             // 
             this.btnCargarFirma.Location = new System.Drawing.Point(692, 448);
-            this.btnCargarFirma.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnCargarFirma.Margin = new System.Windows.Forms.Padding(4);
             this.btnCargarFirma.Name = "btnCargarFirma";
             this.btnCargarFirma.Size = new System.Drawing.Size(129, 28);
             this.btnCargarFirma.TabIndex = 9;
@@ -257,7 +257,7 @@
             // btnCoFirmar
             // 
             this.btnCoFirmar.Location = new System.Drawing.Point(129, 514);
-            this.btnCoFirmar.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnCoFirmar.Margin = new System.Windows.Forms.Padding(4);
             this.btnCoFirmar.Name = "btnCoFirmar";
             this.btnCoFirmar.Size = new System.Drawing.Size(100, 28);
             this.btnCoFirmar.TabIndex = 10;
@@ -278,7 +278,7 @@
             // txtIdentificadorPolitica
             // 
             this.txtIdentificadorPolitica.Location = new System.Drawing.Point(21, 329);
-            this.txtIdentificadorPolitica.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtIdentificadorPolitica.Margin = new System.Windows.Forms.Padding(4);
             this.txtIdentificadorPolitica.Name = "txtIdentificadorPolitica";
             this.txtIdentificadorPolitica.Size = new System.Drawing.Size(312, 22);
             this.txtIdentificadorPolitica.TabIndex = 12;
@@ -297,7 +297,7 @@
             // txtHashPolitica
             // 
             this.txtHashPolitica.Location = new System.Drawing.Point(369, 327);
-            this.txtHashPolitica.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtHashPolitica.Margin = new System.Windows.Forms.Padding(4);
             this.txtHashPolitica.Name = "txtHashPolitica";
             this.txtHashPolitica.Size = new System.Drawing.Size(451, 22);
             this.txtHashPolitica.TabIndex = 14;
@@ -316,7 +316,7 @@
             // txtURIPolitica
             // 
             this.txtURIPolitica.Location = new System.Drawing.Point(21, 395);
-            this.txtURIPolitica.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtURIPolitica.Margin = new System.Windows.Forms.Padding(4);
             this.txtURIPolitica.Name = "txtURIPolitica";
             this.txtURIPolitica.Size = new System.Drawing.Size(799, 22);
             this.txtURIPolitica.TabIndex = 16;
@@ -326,7 +326,7 @@
             // btnContraFirma
             // 
             this.btnContraFirma.Location = new System.Drawing.Point(129, 550);
-            this.btnContraFirma.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnContraFirma.Margin = new System.Windows.Forms.Padding(4);
             this.btnContraFirma.Name = "btnContraFirma";
             this.btnContraFirma.Size = new System.Drawing.Size(100, 28);
             this.btnContraFirma.TabIndex = 17;
@@ -349,11 +349,10 @@
             this.cmbAlgoritmo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbAlgoritmo.FormattingEnabled = true;
             this.cmbAlgoritmo.Items.AddRange(new object[] {
-            "RSAwithSHA1",
             "RSAwithSHA256",
             "RSAwithSHA512"});
             this.cmbAlgoritmo.Location = new System.Drawing.Point(21, 462);
-            this.cmbAlgoritmo.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cmbAlgoritmo.Margin = new System.Windows.Forms.Padding(4);
             this.cmbAlgoritmo.Name = "cmbAlgoritmo";
             this.cmbAlgoritmo.Size = new System.Drawing.Size(143, 24);
             this.cmbAlgoritmo.TabIndex = 19;
@@ -361,7 +360,7 @@
             // btnFirmarHuella
             // 
             this.btnFirmarHuella.Location = new System.Drawing.Point(21, 550);
-            this.btnFirmarHuella.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnFirmarHuella.Margin = new System.Windows.Forms.Padding(4);
             this.btnFirmarHuella.Name = "btnFirmarHuella";
             this.btnFirmarHuella.Size = new System.Drawing.Size(100, 28);
             this.btnFirmarHuella.TabIndex = 20;
@@ -376,7 +375,7 @@
             // btnFirmaMavisa
             // 
             this.btnFirmaMavisa.Location = new System.Drawing.Point(237, 514);
-            this.btnFirmaMavisa.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnFirmaMavisa.Margin = new System.Windows.Forms.Padding(4);
             this.btnFirmaMavisa.Name = "btnFirmaMavisa";
             this.btnFirmaMavisa.Size = new System.Drawing.Size(123, 28);
             this.btnFirmaMavisa.TabIndex = 21;
@@ -411,7 +410,7 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.btnFirmar);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "FrmPrincipal";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Test firma Xades";

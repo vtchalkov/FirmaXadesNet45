@@ -60,10 +60,9 @@ namespace FirmaXadesNet.Clients
         /// <param name="issuerCert"></param>
         /// <param name="url"></param>
         /// <returns></returns>
-        public byte[] QueryBinary(Org.BouncyCastle.X509.X509Certificate eeCert, Org.BouncyCastle.X509.X509Certificate issuerCert, string url, GeneralName requestorName = null,
-            System.Security.Cryptography.X509Certificates.X509Certificate2 signCertificate = null)
+        public byte[] QueryBinary(Org.BouncyCastle.X509.X509Certificate eeCert, Org.BouncyCastle.X509.X509Certificate issuerCert, string url, bool addNonce, GeneralName requestorName = null, System.Security.Cryptography.X509Certificates.X509Certificate2 signCertificate = null)
         {
-            OcspReq req = GenerateOcspRequest(issuerCert, eeCert.SerialNumber, requestorName, signCertificate);
+            OcspReq req = GenerateOcspRequest(issuerCert, eeCert.SerialNumber, requestorName, signCertificate, addNonce);
 
             byte[] binaryResp = PostData(url, req.GetEncoded(), "application/ocsp-request", "application/ocsp-response");
 
@@ -118,7 +117,7 @@ namespace FirmaXadesNet.Clients
         /// </summary>
         /// <param name="binaryResp"></param>
         /// <returns></returns>
-        public CertificateStatus ProcessOcspResponse(byte[] binaryResp)
+        public CertificateStatus ProcessOcspResponse(byte[] binaryResp, bool checkNonce)
         {
             if (binaryResp.Length == 0)
             {
@@ -132,10 +131,13 @@ namespace FirmaXadesNet.Clients
             {
                 BasicOcspResp or = (BasicOcspResp)r.GetResponseObject();
 
-                if (or.GetExtensionValue(OcspObjectIdentifiers.PkixOcspNonce).ToString() !=
-                    _nonceAsn1OctetString.ToString())
+                if (checkNonce)
                 {
-                    throw new Exception("Bad nonce value");
+                    if (or.GetExtensionValue(OcspObjectIdentifiers.PkixOcspNonce).ToString() !=
+                        _nonceAsn1OctetString.ToString())
+                    {
+                        throw new Exception("Bad nonce value");
+                    }
                 }
 
                 if (or.Responses.Length == 1)
@@ -226,15 +228,14 @@ namespace FirmaXadesNet.Clients
         }
 
 
-        private OcspReq GenerateOcspRequest(Org.BouncyCastle.X509.X509Certificate issuerCert, BigInteger serialNumber, GeneralName requestorName,
-            System.Security.Cryptography.X509Certificates.X509Certificate2 signCertificate)
+        private OcspReq GenerateOcspRequest(Org.BouncyCastle.X509.X509Certificate issuerCert, BigInteger serialNumber, GeneralName requestorName, System.Security.Cryptography.X509Certificates.X509Certificate2 signCertificate, bool addNonce)
         {
             CertificateID id = new CertificateID(CertificateID.HashSha1, issuerCert, serialNumber);
-            return GenerateOcspRequest(id, requestorName, signCertificate);
+            return GenerateOcspRequest(id, requestorName, signCertificate, addNonce);
         }
 
         private OcspReq GenerateOcspRequest(CertificateID id, GeneralName requestorName,
-            System.Security.Cryptography.X509Certificates.X509Certificate2 signCertificate)
+            System.Security.Cryptography.X509Certificates.X509Certificate2 signCertificate, bool addNonce)
         {
             OcspReqGenerator ocspRequestGenerator = new OcspReqGenerator();
 
@@ -245,16 +246,18 @@ namespace FirmaXadesNet.Clients
                 ocspRequestGenerator.SetRequestorName(requestorName);
             }
 
-            List<DerObjectIdentifier> oids = new List<DerObjectIdentifier>();
-            Hashtable values = new Hashtable();
+            if (addNonce)
+            {
+                List<DerObjectIdentifier> oids = new List<DerObjectIdentifier>();
+                Hashtable values = new Hashtable();
 
-            oids.Add(OcspObjectIdentifiers.PkixOcspNonce);
+                oids.Add(OcspObjectIdentifiers.PkixOcspNonce);
 
-            _nonceAsn1OctetString = new DerOctetString(new DerOctetString(BigInteger.ValueOf(DateTime.Now.Ticks).ToByteArray()));
+                _nonceAsn1OctetString = new DerOctetString(new DerOctetString(BigInteger.ValueOf(DateTime.Now.Ticks).ToByteArray()));
 
-            values.Add(OcspObjectIdentifiers.PkixOcspNonce, new Org.BouncyCastle.Asn1.X509.X509Extension(false, _nonceAsn1OctetString));
-            ocspRequestGenerator.SetRequestExtensions(new X509Extensions(oids, values));
-
+                values.Add(OcspObjectIdentifiers.PkixOcspNonce, new Org.BouncyCastle.Asn1.X509.X509Extension(false, _nonceAsn1OctetString));
+                ocspRequestGenerator.SetRequestExtensions(new X509Extensions(oids, values));
+            }
             if (signCertificate != null)
             {
                 return ocspRequestGenerator.Generate(signCertificate.GetRSAPrivateKey(), CertUtil.GetCertChain(signCertificate));

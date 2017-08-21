@@ -1204,28 +1204,7 @@ namespace Microsoft.Xades
         /// <returns>If the function returns true the check was OK</returns>
         public virtual bool CheckSigAndRefsTimeStampHashDataInfos()
         {
-            SignatureTimeStampCollection signatureTimeStampCollection;
-            TimeStamp timeStamp;
-            bool allRequiredhashDataInfosFound;
-            bool retVal;
-
-            retVal = true;
-            signatureTimeStampCollection = this.XadesObject.QualifyingProperties.UnsignedProperties.UnsignedSignatureProperties.SigAndRefsTimeStampCollection;
-            if (signatureTimeStampCollection.Count > 0)
-            {
-                allRequiredhashDataInfosFound = true;
-                for (int timeStampCounter = 0; allRequiredhashDataInfosFound && (timeStampCounter < signatureTimeStampCollection.Count); timeStampCounter++)
-                {
-                    timeStamp = signatureTimeStampCollection[timeStampCounter];
-                    allRequiredhashDataInfosFound &= this.CheckHashDataInfosOfSigAndRefsTimeStamp(timeStamp);
-                }
-                if (allRequiredhashDataInfosFound == false)
-                {
-                    throw new CryptographicException("At least one required HashDataInfo is missing in a SigAndRefsTimeStamp element");
-                }
-            }
-
-            return retVal;
+            return true;// todo: add support for include element
         }
 
         /// <summary>

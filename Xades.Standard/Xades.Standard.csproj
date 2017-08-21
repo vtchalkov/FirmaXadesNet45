@@ -4,9 +4,9 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>Xades implementation based on FirmaXadesNet made by the Department of New Technologies of the Department of Urbanism of the City of Cartagena, based on a modification of the XAdES starter kit by Microsoft France.</Description>
-    <AssemblyVersion>1.0.0.2</AssemblyVersion>
-    <FileVersion>1.0.0.2</FileVersion>
-    <Version>1.0.2</Version>
+    <AssemblyVersion>1.0.0.3</AssemblyVersion>
+    <FileVersion>1.0.0.3</FileVersion>
+    <Version>1.0.3</Version>
   </PropertyGroup>
 
   <ItemGroup>

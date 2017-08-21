@@ -63,11 +63,12 @@ namespace TestFirmaXades
 
         private SignaturePolicyInfo ObtenerPolitica()
         {
-            SignaturePolicyInfo spi = new SignaturePolicyInfo();
-
-            spi.PolicyIdentifier = txtIdentificadorPolitica.Text;
-            spi.PolicyHash = txtHashPolitica.Text;
-            spi.PolicyUri = txtURIPolitica.Text;
+            SignaturePolicyInfo spi = new SignaturePolicyInfo
+            {
+                PolicyIdentifier = txtIdentificadorPolitica.Text,
+                PolicyHash = txtHashPolitica.Text,
+                PolicyUri = txtURIPolitica.Text
+            };
 
             return spi;
         }
@@ -75,10 +76,6 @@ namespace TestFirmaXades
         private SignatureMethod ObtenerAlgoritmo()
         {
             if (cmbAlgoritmo.SelectedIndex == 0)
-            {
-                return SignatureMethod.RSAwithSHA1;
-            }
-            else if (cmbAlgoritmo.SelectedIndex == 1)
             {
                 return SignatureMethod.RSAwithSHA256;
             }
@@ -91,9 +88,11 @@ namespace TestFirmaXades
 
         private SignatureParameters ObtenerParametrosFirma()
         {
-            SignatureParameters parametros = new SignatureParameters();           
-            parametros.SignatureMethod = ObtenerAlgoritmo();
-            parametros.SigningDate = DateTime.Now;
+            SignatureParameters parametros = new SignatureParameters
+            {
+                SignatureMethod = ObtenerAlgoritmo(),
+                SigningDate = DateTime.Now
+            };
 
             // Test SignatureCommitment
             var sc = new SignatureCommitment(SignatureCommitmentType.ProofOfOrigin);            
@@ -106,7 +105,7 @@ namespace TestFirmaXades
         {
             if (string.IsNullOrEmpty(txtFichero.Text))
             {
-                MessageBox.Show("Debe seleccionar un fichero para firmar.");
+                MessageBox.Show("You must select a file to sign.");
                 return;
             }
 
@@ -148,7 +147,7 @@ namespace TestFirmaXades
                 }
             }
             
-            MessageBox.Show("Firma completada, ahora puede Guardar la firma o ampliarla a Xades-T.", "Test firma XADES",
+            MessageBox.Show("Signature completed, you can now Save the signature or extend it to Xades-T or Xades-XL.", "Test firma XADES",
                 MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
@@ -163,7 +162,7 @@ namespace TestFirmaXades
                 _signatureDocument = xadesService.CoSign(_signatureDocument, parametros);
             }
 
-            MessageBox.Show("Firma completada correctamente.", "Test firma XADES",
+            MessageBox.Show("Signature completed successfully.", "Test firma XADES",
                 MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
@@ -182,12 +181,12 @@ namespace TestFirmaXades
 
                 if (string.IsNullOrEmpty(message))
                 {
-                    message = "Seleccione un certificado.";
+                    message = "Certificate selection";
                 }
 
                 if (string.IsNullOrEmpty(title))
                 {
-                    title = "Firmar archivo";
+                    title = "Certificate list";
                 }
 
                 X509Certificate2Collection scollection = X509Certificate2UI.SelectFromCollection(fcollection, title, message, X509SelectionFlag.SingleSelection);
@@ -198,7 +197,7 @@ namespace TestFirmaXades
 
                     if (cert.HasPrivateKey == false)
                     {
-                        throw new Exception("El certificado no tiene asociada una clave privada.");
+                        throw new Exception("The certificate does not have a private key associated with it.");
                     }
                 }
 
@@ -207,7 +206,7 @@ namespace TestFirmaXades
             catch (Exception ex)
             {
                 // Thx @rasputino
-                throw new Exception("No se ha podido obtener la clave privada.", ex);
+                throw new Exception("The private key could not be fetched.", ex);
             }
 
             return cert;
@@ -217,28 +216,21 @@ namespace TestFirmaXades
         {
             try
             {
-                UpgradeParameters parametros = new UpgradeParameters();
-
-                parametros.TimeStampClient = new TimeStampClient(txtURLSellado.Text);
+                UpgradeParameters parametros = new UpgradeParameters
+                {
+                    TimeStampClient = new TimeStampClient(txtURLSellado.Text)
+                };
                 parametros.OCSPServers.Add(new OcspServer(txtOCSP.Text));
-
-                // test con @firma
-                /* parametros.GetOcspUrlFromCertificate = false;
-                OcspServer ocspServer = new OcspServer("https://afirma.redsara.es/servidorOcsp/servidorOCSP");                
-                ocspServer.SetRequestorName(OcspServer.Rfc822Name, "idAplicacion");
-                ocspServer.SignCertificate = CertUtil.SelectCertificate();
-
-                parametros.OCSPServers.Add(ocspServer); */
-
+               
                 XadesUpgraderService upgrader = new XadesUpgraderService();
                 upgrader.Upgrade(_signatureDocument, formato, parametros);
               
-                MessageBox.Show("Firma ampliada correctamente", "Test firma XADES",
+                MessageBox.Show("Signature extended correctly", $"Extend to {formato.ToString()}",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Ha ocurrido un error ampliando la firma: " + ex.Message);
+                MessageBox.Show("An error has occurred extending the signature: " + ex.Message);
             }
         }
 
@@ -258,7 +250,7 @@ namespace TestFirmaXades
             {
                 _signatureDocument.Save(saveFileDialog1.FileName);
 
-                MessageBox.Show("Firma guardada correctamente.");
+                MessageBox.Show("Signature saved successfully.");
             }
         }
 
@@ -287,12 +279,12 @@ namespace TestFirmaXades
 
                         if (!result.IsValid)
                         {
-                            MessageBox.Show(result.Message, "FIRMA NO VÁLIDA");
+                            MessageBox.Show(result.Message, "Signature is not valid.");
                         }
                     }
                     else
                     {
-                        MessageBox.Show("Debe seleccionar una firma.");
+                        MessageBox.Show("You must select a signature.");
                     }
                 }
             }
@@ -309,7 +301,7 @@ namespace TestFirmaXades
                 _signatureDocument = xadesService.CounterSign(_signatureDocument, parametros);
             }
 
-            MessageBox.Show("Firma completada correctamente.", "Test firma XADES",
+            MessageBox.Show("Signature completed successfully.", "Test firma XADES",
                 MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
@@ -317,13 +309,13 @@ namespace TestFirmaXades
         {
             if (!rbInternnallyDetached.Checked)
             {
-                MessageBox.Show("Por favor, seleccione el tipo de firma internally detached.");
+                MessageBox.Show("Please select the type of signature internally detached.");
                 return;
             }
 
             if (string.IsNullOrEmpty(txtFichero.Text))
             {
-                MessageBox.Show("Debe seleccionar un fichero para firmar.");
+                MessageBox.Show("You must select a file to sign.");
                 return;
             }
 
@@ -341,7 +333,7 @@ namespace TestFirmaXades
                 }
             }            
 
-            MessageBox.Show("Firma completada, ahora puede Guardar la firma o ampliarla a Xades-T.", "Test firma XADES",
+            MessageBox.Show("Signature completed, you can now Save the signature or expand it to Xades-T or Xades-XL.", "Test firma XADES",
                 MessageBoxButtons.OK, MessageBoxIcon.Information);
 
         }
@@ -363,12 +355,14 @@ namespace TestFirmaXades
 
                 using (Signer signer = new Signer(SelectCertificate()))
                 {
-                    SignatureParameters sp = new SignatureParameters();
-                    sp.Signer = signer;
-                    sp.SignaturePackaging = SignaturePackaging.INTERNALLY_DETACHED;
-                    sp.InputMimeType = "application/pdf";
-                    sp.SignatureMethod = ObtenerAlgoritmo();
-                    sp.SignaturePolicyInfo = ObtenerPolitica();
+                    SignatureParameters sp = new SignatureParameters
+                    {
+                        Signer = signer,
+                        SignaturePackaging = SignaturePackaging.INTERNALLY_DETACHED,
+                        InputMimeType = "application/pdf",
+                        SignatureMethod = ObtenerAlgoritmo(),
+                        SignaturePolicyInfo = ObtenerPolitica()
+                    };
 
                     XadesService xadesService = new XadesService();
 
@@ -380,7 +374,7 @@ namespace TestFirmaXades
                     }
                 }
 
-                MessageBox.Show("Proceso completado");
+                MessageBox.Show("Process completed.");
             }
         }
 
